@@ -1,4 +1,4 @@
-import { C, Dog, Sparkle } from "./Dogs";
+import { C, Dog } from "./Dogs";
 
 export function CalmScene() {
   return (
@@ -6,7 +6,7 @@ export function CalmScene() {
       viewBox="0 0 480 400"
       className="calm-scene"
       role="img"
-      aria-label="Illustration of a long-haired dog with closed eyes resting on a soft cushion, with sleepy z marks floating above"
+      aria-label="Illustration of a long-haired dog with closed eyes resting on a soft cushion"
     >
       <circle cx="240" cy="200" r="180" fill={C.cream} opacity=".55" />
       <circle cx="240" cy="200" r="132" fill={C.cream} opacity=".6" />
@@ -17,20 +17,8 @@ export function CalmScene() {
       <g className="bob-slow">
         <Dog coat="long" closed tongue={false} x={110} y={60} width={260} height={260} collar={C.lavender} />
       </g>
-      <g fontFamily="var(--font-display)" fontWeight="900" fill={C.ink} className="zzz">
-        <text x="372" y="110" fontSize="38">
-          Z
-        </text>
-        <text x="404" y="74" fontSize="28">
-          z
-        </text>
-        <text x="428" y="46" fontSize="20">
-          z
-        </text>
-      </g>
-      <Sparkle className="twinkle" x={86} y={110} s={1} />
-      <Sparkle className="twinkle t2" x={60} y={230} s={0.7} />
-      <Sparkle className="twinkle t3" x={410} y={240} s={0.8} />
+      <ellipse cx="400" cy="88" rx="36" ry="14" fill={C.lavender} opacity=".55" />
+      <ellipse cx="418" cy="62" rx="22" ry="9" fill={C.lavender} opacity=".45" />
     </svg>
   );
 }
@@ -51,8 +39,6 @@ export function BookingScene() {
       <g className="bob">
         <Dog coat="double" x={170} y={46} width={176} height={176} collar={C.cream} />
       </g>
-      <Sparkle className="twinkle" x={40} y={50} s={0.9} />
-      <Sparkle className="twinkle t2" x={330} y={40} s={0.8} />
     </svg>
   );
 }

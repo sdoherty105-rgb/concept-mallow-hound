@@ -131,7 +131,7 @@ export default function HomePage() {
                   <span>From</span> ${p.basePrice}
                   <small>from {formatDuration(p.baseMinutes)} on the van</small>
                 </p>
-                <ul className="ticks ticks--sm">
+                <ul className="feature-list feature-list--sm">
                   {p.includes.slice(0, 4).map((i) => (
                     <li key={i}>{i}</li>
                   ))}

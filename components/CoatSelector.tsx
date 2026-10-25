@@ -116,7 +116,7 @@ export function CoatSelector() {
           <p className="result__care">
             <strong>Between visits:</strong> {rec.coat.care}
           </p>
-          <ul className="ticks">
+          <ul className="feature-list">
             {rec.package.includes.slice(0, 4).map((i) => (
               <li key={i}>{i}</li>
             ))}

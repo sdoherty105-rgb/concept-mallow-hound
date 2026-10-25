@@ -52,7 +52,7 @@ export default function PackagesPage() {
                 <div className="detail__body">
                   <h3>{p.name}</h3>
                   <p className="detail__tag">{p.tagline}</p>
-                  <ul className="ticks">
+                  <ul className="feature-list">
                     {p.includes.map((i) => (
                       <li key={i}>{i}</li>
                     ))}

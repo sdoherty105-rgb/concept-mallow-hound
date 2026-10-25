@@ -1,4 +1,4 @@
-import { Bubble, C, Dog, Sparkle } from "./Dogs";
+import { Bubble, C, Dog } from "./Dogs";
 
 const stroke = { stroke: C.ink, strokeWidth: 4, strokeLinejoin: "round" as const, strokeLinecap: "round" as const };
 
@@ -87,10 +87,6 @@ export function HeroScene() {
       <Bubble className="bubble" x={352} y={50} r={10} delay={1.2} />
       <Bubble className="bubble" x={270} y={38} r={8} delay={2.1} />
       <Bubble className="bubble" x={412} y={84} r={12} delay={0.7} />
-      <Sparkle className="twinkle" x={46} y={330} s={1.2} />
-      <Sparkle className="twinkle" x={290} y={380} s={0.9} />
-      <Sparkle className="twinkle t2" x={592} y={104} s={1} />
-      <Sparkle className="twinkle t3" x={640} y={250} s={0.7} />
     </svg>
   );
 }
@@ -147,7 +143,6 @@ export function VanCutaway() {
           </text>
         </g>
       ))}
-      <Sparkle className="twinkle" x={420} y={196} s={0.9} />
     </svg>
   );
 }

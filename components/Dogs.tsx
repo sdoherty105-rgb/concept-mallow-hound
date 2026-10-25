@@ -275,20 +275,6 @@ export function Dog({
   );
 }
 
-export function Sparkle({ x, y, s = 1, className }: { x: number; y: number; s?: number; className?: string }) {
-  return (
-    <path
-      className={className}
-      transform={`translate(${x} ${y}) scale(${s})`}
-      d="M0 -14 C2 -5 5 -2 14 0 C5 2 2 5 0 14 C-2 5 -5 2 -14 0 C-5 -2 -2 -5 0 -14Z"
-      fill={C.cream}
-      stroke={C.ink}
-      strokeWidth="2.5"
-      strokeLinejoin="round"
-    />
-  );
-}
-
 export function Bubble({ x, y, r, className, delay = 0 }: { x: number; y: number; r: number; className?: string; delay?: number }) {
   return (
     <g className={className} style={{ animationDelay: `${delay}s` }}>

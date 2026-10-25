@@ -87,3 +87,7 @@ jobs:
         run: npx opennextjs-cloudflare build
         env:
           NEXT_TELEMETRY_DISABLED: "1"
+      - name: Smoke-test Worker locally (wrangler dev, no deploy)
+        run: node scripts/cf-smoke.mjs
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
