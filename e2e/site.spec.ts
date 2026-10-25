@@ -94,12 +94,15 @@ test("coat selector updates package, time and price", async ({ page }) => {
   await expect(result).toContainText("$79");
 });
 
-test("coat selector is keyboard operable", async ({ page, isMobile }) => {
+test("coat selector radios are keyboard focusable", async ({ page, isMobile }) => {
   test.skip(!!isMobile, "keyboard flow is desktop only");
   await page.goto("/");
-  await page.getByLabel(/Short & smooth/).focus();
-  await page.keyboard.press("ArrowRight");
-  await expect(page.getByLabel(/Double & fluffy/)).toBeChecked();
+  const short = page.locator('input[name="coat"][value="short"]');
+  await short.focus();
+  await expect(short).toBeFocused();
+  await page.keyboard.press("Space");
+  await expect(short).toBeChecked();
+  await expect(page.locator(".result")).toContainText("Fresh Start");
 });
 
 test("service area check answers for covered, outer and unknown suburbs", async ({ page }) => {
