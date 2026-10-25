@@ -1,0 +1,35 @@
+{
+  "name": "concept-mallow-hound",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "lhci": "lhci autorun --config=lighthouserc.cjs",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "cf:build": "opennextjs-cloudflare build",
+    "cf:smoke": "npm run cf:build && node scripts/cf-smoke.mjs",
+    "screens": "node scripts/screenshots.mjs"
+  },
+  "dependencies": {
+    "@opennextjs/cloudflare": "^1.20.13",
+    "next": "^15.5.28",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "wrangler": "^4.152.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5"
+  }
+}
