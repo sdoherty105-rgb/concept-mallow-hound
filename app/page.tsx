@@ -2,9 +2,9 @@ import Link from "next/link";
 import { BookingForm } from "@/components/BookingForm";
 import { CoatSelector } from "@/components/CoatSelector";
 import { Dog } from "@/components/Dogs";
-import { BookingScene, CalmIcon, CalmScene } from "@/components/Scenes";
+
 import { ServiceCheck } from "@/components/ServiceCheck";
-import { HeroScene, VanCutaway } from "@/components/Van";
+import { VanBody, VanCutaway } from "@/components/Van";
 import { FAQS, PACKAGES, PROMISES, formatDuration } from "@/lib/data";
 import type { CoatId } from "@/lib/data";
 
@@ -29,42 +29,78 @@ const FEATURES = [
   { t: "Non-slip grooming table", d: "A steady, padded table with a gentle support loop for wriggly or wobbly dogs." },
 ];
 
-const PROMISE_ICONS = ["one", "hello", "breaks", "warm", "stop", "loop"];
+
 
 export default function HomePage() {
   return (
     <>
-      <section className="hero" aria-labelledby="hero-title">
-        <div className="wrap hero__grid">
-          <div className="hero__copy">
-            <p className="eyebrow">Mobile dog grooming · Perth</p>
-            <h1 id="hero-title" className="hero__title">
-              <span className="hero__line">A FRESH LOOK.</span>
-              <span className="hero__line">
-                A <span className="mark">HAPPY HOUND.</span>
-              </span>
-            </h1>
-            <p className="lead">
-              A fully equipped grooming van that parks outside your home. Warm water, calm hands and one dog at a time, so grooming day
-              is a good day.
-            </p>
-            <div className="hero__cta">
-              <a className="btn btn--coral btn--lg" href="#booking">
-                Book a groom
-              </a>
-              <a className="btn btn--ghost btn--lg" href="#area">
-                Check your suburb
-              </a>
-            </div>
-            <ul className="hero__points">
-              <li>One dog at a time</li>
-              <li>No cages or kennels</li>
-              <li>Warm water, quiet dryer</li>
-            </ul>
-          </div>
-          <div className="hero__art">
-            <HeroScene />
-          </div>
+      <section className="hound-front" aria-labelledby="hero-title">
+        <div className="wrap">
+          <p className="hound-location">Mobile dog grooming / Perth</p>
+          <h1 id="hero-title">The groom<br />comes to you.</h1>
+          <div className="hound-van"><svg viewBox="0 0 650 335" role="img" aria-label="The Mallow Hound mobile grooming van, with a dog at its window"><VanBody /></svg></div>
+          <div className="hound-welcome"><p>A warm bath, a tidy coat and a familiar face at the gate.<br />One dog at a time, right outside your home.</p><a className="btn btn--ink" href="#booking">Book a groom</a></div>
+          <div className="hound-links"><a href="#area">Check your suburb</a><span>Onboard water &amp; power</span><a href="#coat">Find your dog&rsquo;s groom</a></div>
+        </div>
+      </section>
+
+      <section id="area" className="section section--mint" aria-labelledby="area-title">
+        <div className="wrap">
+          <header className="section__head">
+            <p className="eyebrow">Service area</p>
+            <h2 id="area-title">Does the van come to you?</h2>
+            <p className="lead lead--sm">We cover a loop of Perth suburbs, with a home zone and a slightly wider outer zone.</p>
+          </header>
+          <ServiceCheck />
+        </div>
+      </section>
+
+      <section id="coat" className="section section--cream" aria-labelledby="coat-title">
+        <div className="wrap">
+          <header className="section__head">
+            <p className="eyebrow">Coat selector</p>
+            <h2 id="coat-title">Every coat is different.</h2>
+            <p className="lead lead--sm">Pick a coat type and a size. We’ll show the package we’d book, how long it takes and what it costs.</p>
+          </header>
+          <CoatSelector />
+        </div>
+      </section>
+
+      <section id="packages" className="section section--lav" aria-labelledby="pk-title">
+        <div className="wrap">
+          <header className="section__head">
+            <p className="eyebrow">Packages</p>
+            <h2 id="pk-title">The grooming menu.</h2>
+            <p className="lead lead--sm">Honest prices, set by coat and size. Not sure which? The coat selector below will point you to the right one.</p>
+          </header>
+          <ul className="pkgs">
+            {PACKAGES.map((p) => (
+              <li key={p.id} className={`pkg pkg--${p.tint}`}>
+                <div className="pkg__art">
+                  <Dog coat={PACKAGE_DOG[p.id]} className="pkg__dog" collar={p.tint === "coral" ? "#FFF7EB" : undefined} />
+                </div>
+                <h3>{p.name}</h3>
+                <p className="pkg__tag">{p.tagline}</p>
+                <p className="pkg__price">
+                  <span>From</span> ${p.basePrice}
+                  <small>from {formatDuration(p.baseMinutes)} on the van</small>
+                </p>
+                <ul className="feature-list feature-list--sm">
+                  {p.includes.slice(0, 4).map((i) => (
+                    <li key={i}>{i}</li>
+                  ))}
+                </ul>
+                <p className="pkg__best">
+                  <strong>Best for:</strong> {p.bestFor}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <p className="center">
+            <Link prefetch={false} className="btn btn--ink" href="/packages">
+              See everything that’s included
+            </Link>
+          </p>
         </div>
       </section>
 
@@ -112,79 +148,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="packages" className="section section--lav" aria-labelledby="pk-title">
-        <div className="wrap">
-          <header className="section__head">
-            <p className="eyebrow">Packages</p>
-            <h2 id="pk-title">Four simple ways to a happy hound</h2>
-            <p className="lead lead--sm">Honest prices, set by coat and size. Not sure which? The coat selector below will point you to the right one.</p>
-          </header>
-          <ul className="pkgs">
-            {PACKAGES.map((p) => (
-              <li key={p.id} className={`pkg pkg--${p.tint}`}>
-                <div className="pkg__art">
-                  <Dog coat={PACKAGE_DOG[p.id]} className="pkg__dog" collar={p.tint === "coral" ? "#FFF7EB" : undefined} />
-                </div>
-                <h3>{p.name}</h3>
-                <p className="pkg__tag">{p.tagline}</p>
-                <p className="pkg__price">
-                  <span>From</span> ${p.basePrice}
-                  <small>from {formatDuration(p.baseMinutes)} on the van</small>
-                </p>
-                <ul className="feature-list feature-list--sm">
-                  {p.includes.slice(0, 4).map((i) => (
-                    <li key={i}>{i}</li>
-                  ))}
-                </ul>
-                <p className="pkg__best">
-                  <strong>Best for:</strong> {p.bestFor}
-                </p>
-              </li>
-            ))}
-          </ul>
-          <p className="center">
-            <Link prefetch={false} className="btn btn--ink" href="/packages">
-              See everything that’s included
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      <section id="coat" className="section section--cream" aria-labelledby="coat-title">
-        <div className="wrap">
-          <header className="section__head">
-            <p className="eyebrow">Coat selector</p>
-            <h2 id="coat-title">Find your dog’s groom in two taps</h2>
-            <p className="lead lead--sm">Pick a coat type and a size. We’ll show the package we’d book, how long it takes and what it costs.</p>
-          </header>
-          <CoatSelector />
-        </div>
-      </section>
-
-      <section id="area" className="section section--mint" aria-labelledby="area-title">
-        <div className="wrap">
-          <header className="section__head">
-            <p className="eyebrow">Service area</p>
-            <h2 id="area-title">Does the van come to you?</h2>
-            <p className="lead lead--sm">We cover a loop of Perth suburbs, with a home zone and a slightly wider outer zone.</p>
-          </header>
-          <ServiceCheck />
-        </div>
-      </section>
-
       <section id="calm" className="section section--lav calm" aria-labelledby="calm-title">
         <div className="wrap calm__grid">
           <div className="calm__art">
-            <CalmScene />
+            <p className="calm-type">A little<br />patience.<br /><em>A lot of care.</em></p>
           </div>
           <div>
-            <p className="eyebrow">Our calm-handling promise</p>
+            <p className="eyebrow">At your dog’s pace</p>
             <h2 id="calm-title">Grooming should never feel like something being done to your dog</h2>
-            <p className="lead lead--sm">Six things we’ll always do, written down so you can hold us to them.</p>
+            <p className="lead lead--sm">Time to settle in. Breaks when they need them. Here is how we work.</p>
             <ul className="promises">
-              {PROMISES.map((p, i) => (
+              {PROMISES.map((p) => (
                 <li key={p.title} className="promise">
-                  <CalmIcon name={PROMISE_ICONS[i]} />
+
                   <div>
                     <h3>{p.title}</h3>
                     <p>{p.body}</p>
@@ -204,7 +180,7 @@ export default function HomePage() {
             <p className="lead lead--sm">
               It takes about a minute. Choose a package, or leave it blank and we’ll recommend one based on coat and size.
             </p>
-            <BookingScene />
+
           </div>
           <div className="booking-card">
             <BookingForm />
@@ -232,3 +208,4 @@ export default function HomePage() {
     </>
   );
 }
+

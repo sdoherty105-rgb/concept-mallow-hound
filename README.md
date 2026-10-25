@@ -46,3 +46,8 @@ Deployment is intentionally not part of this repository's workflow. `wrangler.js
 - Forms are demo-only: client-side validation, a clear demo success state, no network request
 - WCAG 2.2 AA focus: landmarks, keyboard support, visible focus, checked contrast, reduced-motion support, content works without JavaScript effects
 - Asset sources and licences are recorded in [`ASSETS.md`](./ASSETS.md)
+
+
+## Visual redesign
+
+A centred van-led opening replaces the split headline and illustration panel. Coverage checking and coat selection now lead the booking journey. Package cards, offset shadows, repeated decorative scenes and the invented service map have been removed in favour of an open grooming menu, simple handling notes and a quieter booking form. Original van and coat illustrations remain purposeful brand assets.

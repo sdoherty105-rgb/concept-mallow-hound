@@ -3,7 +3,7 @@
 import { useId, useState } from "react";
 import { SUBURBS, ZONE_FEES, checkSuburb, type SuburbCheck, type Zone } from "@/lib/data";
 import { emitPrefill, useHydrated } from "@/lib/hydrated";
-import { C, Paw } from "./Dogs";
+
 
 function ZoneList({ zone, active, onPick }: { zone: Zone; active?: string; onPick: (name: string) => void }) {
   const hydrated = useHydrated();
@@ -26,36 +26,6 @@ function ZoneList({ zone, active, onPick }: { zone: Zone; active?: string; onPic
         </li>
       ))}
     </ul>
-  );
-}
-
-function AreaMap({ active }: { active?: string }) {
-  return (
-    <svg viewBox="0 0 640 400" className="map" aria-hidden="true" focusable="false">
-      <rect width="640" height="400" rx="36" fill={C.cream} />
-      <path d="M0 0 H150 C100 60 140 110 96 160 C60 200 110 250 80 300 C60 340 90 380 70 400 H0Z" fill={C.lavender} opacity=".8" />
-      <path d="M0 0 H150 C100 60 140 110 96 160 C60 200 110 250 80 300 C60 340 90 380 70 400" fill="none" stroke={C.ink} strokeWidth="3.5" strokeLinecap="round" />
-      <path d="M26 70 q12 -10 24 0 t24 0 M18 180 q12 -10 24 0 t24 0 M24 300 q12 -10 24 0 t24 0" fill="none" stroke={C.cream} strokeWidth="4" strokeLinecap="round" />
-      <ellipse cx="320" cy="205" rx="268" ry="196" fill={C.mint} opacity=".35" />
-      <ellipse cx="300" cy="206" rx="146" ry="104" fill={C.coral} opacity=".22" stroke={C.ink} strokeWidth="2.5" strokeDasharray="2 9" strokeLinecap="round" />
-      <ellipse cx="320" cy="205" rx="268" ry="196" fill="none" stroke={C.ink} strokeWidth="2.5" strokeDasharray="2 9" strokeLinecap="round" />
-      <path d="M440 0 C410 60 470 110 420 170 C390 210 440 250 420 300 C410 340 450 380 430 400" fill="none" stroke={C.lavender} strokeWidth="14" strokeLinecap="round" opacity=".85" />
-      <g>
-        <circle cx="300" cy="206" r="26" fill={C.ink} />
-        <g transform="translate(284 190)">
-          <Paw size={32} color={C.cream} />
-        </g>
-      </g>
-      {SUBURBS.map((s) => {
-        const on = active === s.name;
-        return (
-          <g key={s.name} className={`pin${on ? " is-active" : ""}`} transform={`translate(${s.x} ${s.y})`}>
-            {on && <circle r="22" fill={C.coral} opacity=".35" className="pin__pulse" />}
-            <circle r={on ? 11 : 8} fill={s.zone === 1 ? C.coral : C.lavender} stroke={C.ink} strokeWidth="3.5" />
-          </g>
-        );
-      })}
-    </svg>
   );
 }
 
@@ -180,9 +150,8 @@ export function ServiceCheck() {
         </div>
         <p className="fine">Suburb names are invented for this concept.</p>
       </div>
-      <div className="area__map">
-        <AreaMap active={active} />
-      </div>
+
     </div>
   );
 }
+

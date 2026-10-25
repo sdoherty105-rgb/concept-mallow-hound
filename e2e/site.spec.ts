@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 const PAGES = [
-  { path: "/", h1: /A FRESH LOOK\.\s*A HAPPY HOUND\./i },
+  { path: "/", h1: /The groom\s*comes to you\./i },
   { path: "/packages", h1: /What’s included, and what it costs/ },
 ];
 const LABEL = "An OFF/SHIFT concept — fictional demonstration";
@@ -155,7 +155,7 @@ test.describe("demo booking form", () => {
     page.on("framenavigated", () => navigations++);
 
     await page.getByLabel("Your name").fill("Sam Example");
-    await page.getByLabel("Mobile").fill("0400 000 000");
+    await page.getByRole("textbox", { name: "Mobile", exact: true }).fill("0400 000 000");
     await page.getByLabel("Email", { exact: true }).fill("sam@example.com");
     await page.getByLabel("Suburb", { exact: true }).selectOption("Mallow Bay");
     await page.getByLabel("Dog’s name").fill("Biscuit");
@@ -206,3 +206,4 @@ test("reduced motion disables animations", async ({ browser }) => {
   expect(name).toBe("none");
   await ctx.close();
 });
+
