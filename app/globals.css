@@ -430,7 +430,7 @@ button, input, select, textarea { font: inherit; color: var(--grape); color-sche
   color: var(--grape);
   pointer-events: none;
 }
-.choice__dog { width: 84px; margin-bottom: 0.35rem; }
+.choice__dog { width: 112px; margin-bottom: 0.2rem; }
 .choice__title { font-family: var(--font-d); font-weight: 800; font-size: 1.15rem; line-height: 1.05; }
 .choice__sub { font-size: 0.95rem; }
 .choice input:checked + .choice__card { background: var(--accent); color: var(--accent-ink); }
@@ -454,7 +454,7 @@ button, input, select, textarea { font: inherit; color: var(--grape); color-sche
   border: 8px solid var(--tangerine);
 }
 .result .demo-flag { color: inherit; }
-.result__dog { width: 120px; }
+.result__dog { width: 148px; }
 .result__package {
   font-family: var(--font-d);
   font-weight: 800;

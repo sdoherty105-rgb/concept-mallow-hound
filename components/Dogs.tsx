@@ -2,36 +2,35 @@ import type { ReactNode } from "react";
 import type { CoatId } from "@/lib/data";
 
 /**
- * Side-profile hounds, one per coat. No eyes, nose or mouth.
- * Each coat is a different silhouette, not the same body with swapped ears.
- * Short is long and low, double is a round coat, curly is a pom clip,
- * long is a hair curtain, wiry is a box with a beard, puppy is a big head.
+ * One pose for every coat: side profile facing right, with a snout,
+ * an ear, two legs and a tail. Coat changes the outline around that dog,
+ * not the fact that it is a dog. No eyes or mouth.
  */
 
 function Frame({ children, className, title }: { children: ReactNode; className?: string; title?: string }) {
   return (
-    <svg
-      viewBox="0 0 240 160"
-      className={className}
-      aria-hidden={title ? undefined : true}
-      role={title ? "img" : undefined}
-      focusable="false"
-    >
+    <svg viewBox="0 0 220 140" className={className} aria-hidden={title ? undefined : true} role={title ? "img" : undefined} focusable="false">
       {title ? <title>{title}</title> : null}
       <g fill="currentColor">{children}</g>
     </svg>
   );
 }
 
+function Leg({ x, y, h }: { x: number; y: number; h: number }) {
+  return <rect x={x} y={y} width="13" height={h} rx="6" />;
+}
+
 function Short() {
   return (
     <>
-      <path d="M18 92 L46 84 L44 98 Z" />
-      <path d="M42 108 C52 74 96 66 138 72 C162 76 176 90 188 102 L176 116 C148 128 86 132 54 120 C40 114 34 112 42 108 Z" />
-      <path d="M156 98 C168 68 196 54 222 64 C234 70 234 86 220 94 C204 102 182 100 168 112 Z" />
-      <path d="M178 66 L160 54 L190 64 Z" />
-      <path d="M72 116 L66 150 L82 150 L86 120 Z" />
-      <path d="M118 120 L122 152 L138 152 L130 122 Z" />
+      <path d="M8 62 C22 48 34 56 40 66 C30 62 16 68 8 66 Z" />
+      <Leg x={52} y={86} h={40} />
+      <Leg x={108} y={84} h={44} />
+      <ellipse cx="86" cy="78" rx="46" ry="24" />
+      <path d="M118 70 L136 46 L152 64 L128 82 Z" />
+      <ellipse cx="128" cy="58" rx="11" ry="16" transform="rotate(-30 128 58)" />
+      <circle cx="146" cy="52" r="18" />
+      <rect x="158" y="46" width="46" height="15" rx="7" />
     </>
   );
 }
@@ -39,13 +38,15 @@ function Short() {
 function Double() {
   return (
     <>
-      <circle cx="118" cy="96" r="52" />
-      <circle cx="168" cy="78" r="34" />
-      <circle cx="62" cy="100" r="28" />
-      <circle cx="86" cy="70" r="22" />
-      <circle cx="146" cy="58" r="20" />
-      <path d="M78 128 L72 152 L90 152 L92 130 Z" />
-      <path d="M124 132 L128 154 L146 154 L138 132 Z" />
+      <ellipse cx="28" cy="70" rx="20" ry="16" />
+      <Leg x={58} y={96} h={32} />
+      <Leg x={112} y={96} h={34} />
+      <ellipse cx="92" cy="82" rx="54" ry="32" />
+      <circle cx="70" cy="58" r="18" />
+      <path d="M124 74 L142 50 L158 68 L134 86 Z" />
+      <circle cx="152" cy="56" r="20" />
+      <ellipse cx="140" cy="48" rx="9" ry="12" />
+      <rect x="166" y="50" width="42" height="16" rx="8" />
     </>
   );
 }
@@ -53,14 +54,17 @@ function Double() {
 function Curly() {
   return (
     <>
-      <circle cx="78" cy="108" r="34" />
-      <circle cx="118" cy="96" r="30" />
-      <circle cx="156" cy="78" r="26" />
-      <circle cx="186" cy="96" r="16" />
-      <circle cx="64" cy="136" r="12" />
-      <circle cx="108" cy="140" r="12" />
-      <circle cx="96" cy="64" r="14" />
-      <circle cx="140" cy="52" r="12" />
+      <circle cx="36" cy="74" r="14" />
+      <Leg x={58} y={96} h={32} />
+      <Leg x={112} y={94} h={36} />
+      <ellipse cx="90" cy="84" rx="44" ry="24" />
+      <circle cx="62" cy="62" r="16" />
+      <circle cx="90" cy="54" r="16" />
+      <circle cx="116" cy="58" r="15" />
+      <path d="M126 72 L144 48 L160 66 L136 84 Z" />
+      <circle cx="154" cy="54" r="18" />
+      <circle cx="146" cy="36" r="10" />
+      <rect x="166" y="48" width="42" height="15" rx="7" />
     </>
   );
 }
@@ -68,13 +72,15 @@ function Curly() {
 function Long() {
   return (
     <>
-      <path d="M78 96 C86 78 120 74 150 80 L156 108 C130 118 96 118 74 108 Z" />
-      <circle cx="168" cy="58" r="24" />
-      <path d="M152 66 C146 90 140 120 136 150 H150 C152 120 156 92 162 70 Z" />
-      <path d="M174 68 C180 96 184 124 186 150 H200 C196 118 190 90 182 68 Z" />
-      <path d="M70 104 C62 120 58 136 56 150 H70 C72 134 76 118 82 106 Z" />
-      <path d="M108 110 C104 126 102 140 100 152 H114 C114 136 116 122 122 110 Z" />
-      <path d="M48 100 C36 112 30 128 34 142 C40 132 52 118 64 108 Z" />
+      <path d="M12 78 C26 96 40 100 48 86 C36 96 22 92 12 84 Z" />
+      <Leg x={54} y={100} h={28} />
+      <Leg x={106} y={98} h={30} />
+      <ellipse cx="86" cy="86" rx="46" ry="22" />
+      <path d="M68 96 C60 114 56 130 58 140 L74 140 C74 120 78 106 86 94 Z" />
+      <path d="M116 76 L134 50 L150 68 L126 86 Z" />
+      <circle cx="144" cy="54" r="18" />
+      <path d="M132 60 C124 78 120 108 124 136 L138 136 C136 102 140 74 148 58 Z" />
+      <rect x="156" y="48" width="48" height="15" rx="7" />
     </>
   );
 }
@@ -82,15 +88,16 @@ function Long() {
 function Wiry() {
   return (
     <>
-      <path d="M46 92 H132 V118 H46 Z" />
-      <path d="M118 78 H168 V108 H124 Z" />
-      <path d="M128 78 L136 48 L150 76 Z" />
-      <path d="M150 72 L164 42 L176 74 Z" />
-      <path d="M156 108 H196 L190 124 H182 L176 116 H168 L162 128 H152 Z" />
-      <path d="M34 96 L48 86 V102 Z" />
-      <path d="M58 118 H70 V150 H58 Z" />
-      <path d="M96 118 H108 V150 H96 Z" />
-      <path d="M132 112 H144 V148 H132 Z" />
+      <path d="M14 62 L36 50 L50 66 L22 74 Z" />
+      <Leg x={52} y={86} h={42} />
+      <Leg x={106} y={84} h={44} />
+      <rect x="44" y="62" width="78" height="36" rx="8" />
+      <path d="M112 68 L130 46 L146 64 L122 80 Z" />
+      <rect x="128" y="38" width="34" height="30" rx="6" />
+      <path d="M132 48 L122 14 L152 46 Z" />
+      <path d="M148 46 L158 10 L174 44 Z" />
+      <rect x="154" y="46" width="50" height="16" rx="7" />
+      <path d="M168 52 H200 L196 78 H186 L178 64 H170 L162 80 H154 Z" />
     </>
   );
 }
@@ -98,13 +105,14 @@ function Wiry() {
 function Puppy() {
   return (
     <>
-      <ellipse cx="108" cy="112" rx="46" ry="30" />
-      <circle cx="162" cy="78" r="36" />
-      <ellipse cx="138" cy="70" rx="14" ry="22" />
-      <ellipse cx="186" cy="74" rx="14" ry="22" />
-      <path d="M78 124 L74 150 L90 150 L92 126 Z" />
-      <path d="M118 128 L122 152 L138 152 L132 128 Z" />
-      <path d="M62 108 L40 116 L46 126 L70 118 Z" />
+      <path d="M22 86 C34 74 46 80 50 90 C40 86 28 92 22 88 Z" />
+      <Leg x={62} y={96} h={30} />
+      <Leg x={108} y={96} h={32} />
+      <ellipse cx="90" cy="90" rx="40" ry="22" />
+      <path d="M116 82 L132 58 L148 76 L124 92 Z" />
+      <ellipse cx="124" cy="70" rx="12" ry="18" transform="rotate(-25 124 70)" />
+      <circle cx="146" cy="64" r="22" />
+      <rect x="162" y="60" width="34" height="16" rx="8" />
     </>
   );
 }
