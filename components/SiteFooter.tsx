@@ -1,69 +1,67 @@
 import Link from "next/link";
 import { CONCEPT_LABEL, CONCEPT_URL, HOURS } from "@/lib/data";
-import { LogoMark } from "./Logo";
-import { NAV } from "./SiteHeader";
 
 export function SiteFooter() {
   return (
-    <footer className="site-footer">
-      <div className="wrap site-footer__grid">
+    <footer className="depot" data-layout="depot">
+      <div className="depot__inner">
         <div>
-          <p className="brand brand--footer">
-            <LogoMark size={44} />
-            <span className="brand__name">Mallow Hound</span>
-          </p>
-          <p className="site-footer__blurb">
-            A mobile grooming van for dogs across the Perth area. Warm water, calm hands and a fresh pup at your front gate.
-          </p>
+          <p className="depot__kicker">The depot</p>
+          <p className="depot__name">Mallow Hound</p>
+          <p className="depot__blurb">The van sleeps here. One dog at a time, then back to the curb outside your place.</p>
         </div>
-        <nav aria-label="Footer">
-          <h2 className="footer-h">Explore</h2>
-          <ul className="footer-list">
-            {NAV.map((l) => (
-              <li key={l.href}>
-                <a href={l.href}>{l.label}</a>
-              </li>
-            ))}
-            <li>
-              <Link prefetch={false} href="/packages">Package details</Link>
-            </li>
-            <li>
-              <a href="/#booking">Book a groom</a>
-            </li>
-          </ul>
-        </nav>
         <div>
-          <h2 className="footer-h">Van hours</h2>
-          <ul className="footer-list">
-            {HOURS.map((h) => (
-              <li key={h.day}>
-                <strong>{h.day}</strong>
-                <br />
-                {h.time}
+          <h2 className="depot__h">Van hours</h2>
+          <ul className="depot__list">
+            {HOURS.map((slot) => (
+              <li key={slot.day}>
+                <strong>{slot.day}</strong>
+                <span>{slot.time}</span>
               </li>
             ))}
           </ul>
+          <p className="demo-flag">Demonstration hours. Not a live roster.</p>
         </div>
         <div>
-          <h2 className="footer-h">Say hello</h2>
-          <ul className="footer-list">
+          <h2 className="depot__h">Stops</h2>
+          <ul className="depot__list">
+            <li>
+              <a href="/#how">How the van works</a>
+            </li>
+            <li>
+              <a href="/#coat">Coat and size</a>
+            </li>
+            <li>
+              <Link prefetch={false} href="/packages">
+                Full menu
+              </Link>
+            </li>
+            <li>
+              <a href="/#booking">Book a day</a>
+            </li>
+            <li>
+              <a href="/#faq">Questions</a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h2 className="depot__h">Say hello</h2>
+          <ul className="depot__list">
             <li>(08) 5550 0142</li>
             <li>hello@mallowhound.example</li>
             <li>Perth, Western Australia</li>
           </ul>
-          <p className="footer-small">Fictional contact details. Nothing here is monitored.</p>
+          <p className="demo-flag">Fictional contact details. Nothing here is monitored.</p>
         </div>
       </div>
-      <div className="wrap site-footer__legal">
+      <div className="depot__legal">
         <p>
           <a href={CONCEPT_URL} target="_blank" rel="noopener noreferrer">
             {CONCEPT_LABEL}
             <span className="visually-hidden"> (opens in a new tab)</span>
           </a>
         </p>
-        <p>
-          Mallow Hound is not a real business. Prices, services and suburbs are invented. Illustrations are original SVG artwork made for this concept.
-        </p>
+        <p>Mallow Hound is not a real business. Prices, suburbs, visit windows and promises are invented for this OFF/SHIFT Studio concept.</p>
       </div>
     </footer>
   );

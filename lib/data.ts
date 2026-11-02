@@ -2,9 +2,16 @@ export const CONCEPT_SLUG = "mallow-hound";
 export const CONCEPT_URL = `https://offshiftstudio.com.au/concepts/${CONCEPT_SLUG}`;
 export const CONCEPT_LABEL = "An OFF/SHIFT concept — fictional demonstration";
 
+export const DEMO_PRICE = "Demonstration price. Invented for this concept, not a quote.";
+export const DEMO_SCHEDULE = "Demonstration schedule. Not a live timetable.";
+export const DEMO_SLOTS = "Demonstration week. These slots are invented, not a live diary.";
+export const DEMO_PROMISE = "Demonstration promise. Not a real policy.";
+
 export type CoatId = "short" | "double" | "curly" | "long" | "wiry";
 export type SizeId = "small" | "medium" | "large" | "giant";
 export type PackageId = "fresh-start" | "full-mallow" | "shed-less" | "puppy-debut";
+
+export type AccentName = "mint" | "butter" | "cobalt" | "tangerine" | "grape";
 
 export interface Coat {
   id: CoatId;
@@ -14,6 +21,7 @@ export interface Coat {
   timeFactor: number;
   packageId: PackageId;
   why: string;
+  accent: AccentName;
 }
 
 export interface Size {
@@ -45,6 +53,7 @@ export const COATS: Coat[] = [
     care: "A weekly rub-down with a rubber brush keeps shedding in check between visits.",
     timeFactor: 0.9,
     packageId: "fresh-start",
+    accent: "mint",
     why: "Smooth coats don’t need a haircut. A proper bath, a good dry and a tidy of the nails and ears keeps them glossy.",
   },
   {
@@ -54,6 +63,7 @@ export const COATS: Coat[] = [
     care: "Brush through to the skin twice a week. We’ll show you where the undercoat likes to hide.",
     timeFactor: 1.1,
     packageId: "shed-less",
+    accent: "butter",
     why: "A thick undercoat needs releasing, not cutting. A treatment bath and rake-out lifts the loose fluff so your house (and your dog) can breathe.",
   },
   {
@@ -63,6 +73,7 @@ export const COATS: Coat[] = [
     care: "Brush to the skin every couple of days. Curls knot fast, especially behind the ears.",
     timeFactor: 1.1,
     packageId: "full-mallow",
+    accent: "cobalt",
     why: "Curly coats keep growing and tangle easily. A full groom with a haircut in the style you choose keeps them comfy and easy to brush.",
   },
   {
@@ -72,6 +83,7 @@ export const COATS: Coat[] = [
     care: "Brush daily if you can, a few minutes is plenty. Feathering on ears and legs loves to tangle.",
     timeFactor: 1.05,
     packageId: "full-mallow",
+    accent: "tangerine",
     why: "Long coats are happiest with a trim and style to keep the length manageable, so we pair the bath with a full finish.",
   },
   {
@@ -81,6 +93,7 @@ export const COATS: Coat[] = [
     care: "Brush weekly and keep the beard dry and combed. Wiry coats hold on to everything the garden offers.",
     timeFactor: 1,
     packageId: "full-mallow",
+    accent: "grape",
     why: "Wiry coats look their best with a tidy of the beard, brows and legs, so a full groom keeps the scruffy charm without the scruff.",
   },
 ];
@@ -223,22 +236,24 @@ export interface Suburb {
   zone: Zone;
   x: number;
   y: number;
+  /** Invented demonstration visit window. Not a live timetable. */
+  visit: string;
 }
 
 export const ZONE_FEES: Record<Zone, number> = { 1: 0, 2: 15 };
 
 export const SUBURBS: Suburb[] = [
-  { name: "Mallow Bay", zone: 1, x: 250, y: 205 },
-  { name: "Quandong Rise", zone: 1, x: 330, y: 160 },
-  { name: "Tuart Hollow", zone: 1, x: 330, y: 255 },
-  { name: "Coolibah Park", zone: 1, x: 410, y: 205 },
-  { name: "Saltbush Heads", zone: 1, x: 205, y: 125 },
-  { name: "Wattlebird Flats", zone: 1, x: 205, y: 290 },
-  { name: "Kingfisher Reach", zone: 2, x: 480, y: 120 },
-  { name: "Marri Springs", zone: 2, x: 520, y: 235 },
-  { name: "Pelican Hill", zone: 2, x: 130, y: 205 },
-  { name: "Boronia Downs", zone: 2, x: 440, y: 320 },
-  { name: "Sandplain Ridge", zone: 2, x: 360, y: 60 },
+  { name: "Mallow Bay", zone: 1, x: 250, y: 205, visit: "Fridays, 8 to 12" },
+  { name: "Quandong Rise", zone: 1, x: 330, y: 160, visit: "Tuesdays, 9 to 1" },
+  { name: "Tuart Hollow", zone: 1, x: 330, y: 255, visit: "Wednesdays, 8 to 12" },
+  { name: "Coolibah Park", zone: 1, x: 410, y: 205, visit: "Thursdays, 12 to 4" },
+  { name: "Saltbush Heads", zone: 1, x: 205, y: 125, visit: "Mondays, 8 to 12" },
+  { name: "Wattlebird Flats", zone: 1, x: 205, y: 290, visit: "Mondays, 12 to 4" },
+  { name: "Kingfisher Reach", zone: 2, x: 480, y: 120, visit: "Fridays, 1 to 4" },
+  { name: "Marri Springs", zone: 2, x: 520, y: 235, visit: "Tuesdays, 1 to 4" },
+  { name: "Pelican Hill", zone: 2, x: 130, y: 205, visit: "Wednesdays, 1 to 4" },
+  { name: "Boronia Downs", zone: 2, x: 440, y: 320, visit: "Thursdays, 8 to 12" },
+  { name: "Sandplain Ridge", zone: 2, x: 360, y: 60, visit: "Saturdays, 8 to 12" },
 ];
 
 export const norm = (s: string) =>
@@ -306,7 +321,7 @@ export const FAQS = [
   },
   {
     q: "My dog gets anxious. Can you still groom them?",
-    a: "Very likely, yes. Tell us in the booking form and we’ll allow extra time, begin with a meet-and-sniff, and take breaks. If it isn’t working for your dog, we stop. See our calm-handling promise above.",
+    a: "Very likely, yes. Tell us when you book and we’ll allow extra time, begin with a hello, and take breaks. If it isn’t working for your dog, we stop and rebook a shorter visit. That promise is a demonstration, not a real policy.",
   },
   {
     q: "What if my dog’s coat is matted?",

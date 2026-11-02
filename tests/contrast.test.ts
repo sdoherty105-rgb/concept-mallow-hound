@@ -4,69 +4,63 @@ import { contrast } from "@/lib/contrast";
 
 const css = readFileSync("app/globals.css", "utf8");
 const token = (name: string) => {
-  const m = css.match(new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{6})`));
-  if (!m) throw new Error(`token ${name} missing`);
-  return m[1];
+  const match = css.match(new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{6})`));
+  if (!match) throw new Error(`token ${name} missing`);
+  return match[1];
 };
 
 const t = {
-  cream: token("cream"),
-  lav: token("lav"),
-  ink: token("ink"),
-  coral: token("coral"),
-  mint: token("mint"),
-  inkSoft: token("ink-soft"),
-  coralDeep: token("coral-deep"),
-  lavSoft: token("lav-soft"),
-  mintSoft: token("mint-soft"),
-  coralSoft: token("coral-soft"),
   paper: token("paper"),
+  cobalt: token("cobalt"),
+  butter: token("butter"),
+  mint: token("mint"),
+  tangerine: token("tangerine"),
+  grape: token("grape"),
+  white: token("white"),
 };
 
 const AA_TEXT = 4.5;
+const AA_LARGE = 3;
 
 describe("palette tokens match the brief", () => {
-  it("uses the specified brand colours", () => {
-    expect(t.cream.toLowerCase()).toBe("#fff7eb");
-    expect(t.lav.toLowerCase()).toBe("#c9b6e4");
-    expect(t.ink.toLowerCase()).toBe("#34303b");
-    expect(t.coral.toLowerCase()).toBe("#ed917a");
-    expect(t.mint.toLowerCase()).toBe("#c0dcc8");
+  it("uses the route colours", () => {
+    expect(t.paper.toLowerCase()).toBe("#fff9ee");
+    expect(t.cobalt.toLowerCase()).toBe("#2a3df0");
+    expect(t.butter.toLowerCase()).toBe("#ffd84d");
+    expect(t.mint.toLowerCase()).toBe("#7de0b5");
+    expect(t.tangerine.toLowerCase()).toBe("#ff6a2b");
+    expect(t.grape.toLowerCase()).toBe("#3b1c6b");
   });
 });
 
 describe("WCAG AA text contrast for every pairing used", () => {
   const pairs: [string, string, string][] = [
-    ["ink on cream", t.ink, t.cream],
-    ["ink on lavender", t.ink, t.lav],
-    ["ink on mint", t.ink, t.mint],
-    ["ink on coral (buttons)", t.ink, t.coral],
-    ["ink on paper", t.ink, t.paper],
-    ["ink on lav-soft", t.ink, t.lavSoft],
-    ["ink on mint-soft", t.ink, t.mintSoft],
-    ["ink on coral-soft", t.ink, t.coralSoft],
-    ["ink-soft on cream", t.inkSoft, t.cream],
-    ["ink-soft on paper", t.inkSoft, t.paper],
-    ["ink-soft on mint-soft", t.inkSoft, t.mintSoft],
-    ["ink-soft on coral-soft", t.inkSoft, t.coralSoft],
-    ["ink-soft on lav-soft", t.inkSoft, t.lavSoft],
-    ["coral-deep (errors) on cream", t.coralDeep, t.cream],
-    ["coral-deep (errors) on white", t.coralDeep, "#ffffff"],
-    ["coral-deep (errors) on paper", t.coralDeep, t.paper],
-    ["cream on ink (banner, footer, ink buttons)", t.cream, t.ink],
-    ["lavender on ink (footer headings)", t.lav, t.ink],
-    ["footer blurb on ink", "#e4dcec", t.ink],
-    ["footer small on ink", "#d6cde0", t.ink],
+    ["grape on paper", t.grape, t.paper],
+    ["grape on butter", t.grape, t.butter],
+    ["grape on mint", t.grape, t.mint],
+    ["grape on white", t.grape, t.white],
+    ["white on cobalt", t.white, t.cobalt],
+    ["paper on cobalt", t.paper, t.cobalt],
+    ["butter on cobalt", t.butter, t.cobalt],
+    ["white on grape", t.white, t.grape],
+    ["paper on grape", t.paper, t.grape],
+    ["butter on grape", t.butter, t.grape],
+    ["mint on grape", t.mint, t.grape],
   ];
   it.each(pairs)("%s", (_name, fg, bg) => {
     expect(contrast(fg, bg)).toBeGreaterThanOrEqual(AA_TEXT);
   });
+
+  it("keeps grape on tangerine for large display only", () => {
+    expect(contrast(t.grape, t.tangerine)).toBeGreaterThanOrEqual(AA_LARGE);
+    expect(css).not.toMatch(/(^|[^-])color:\s*var\(--tangerine\)/);
+  });
 });
 
 describe("non-text contrast (3:1) for UI boundaries", () => {
-  it("ink outline against cream, lavender and mint", () => {
-    for (const bg of [t.cream, t.lav, t.mint, t.coral]) {
-      expect(contrast(t.ink, bg)).toBeGreaterThanOrEqual(3);
+  it("grape against paper, butter and mint", () => {
+    for (const bg of [t.paper, t.butter, t.mint]) {
+      expect(contrast(t.grape, bg)).toBeGreaterThanOrEqual(3);
     }
   });
 });

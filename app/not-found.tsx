@@ -1,16 +1,19 @@
 import Link from "next/link";
-import { Dog } from "@/components/Dogs";
+import { PuppyMark } from "@/components/Dogs";
 
 export default function NotFound() {
   return (
-    <section className="section section--cream">
-      <div className="wrap center nf">
-        <Dog coat="wiry" className="nf__dog" />
-        <h1 className="page-title">This page has wandered off</h1>
-        <p className="lead lead--sm">We couldn’t find what you were sniffing for.</p>
+    <section className="stop stop--butter miss" data-layout="missed-stop">
+      <div className="stop__inner miss__inner">
+        <PuppyMark className="miss__dog" />
+        <h1 className="h-step">
+          <span>This stop is not </span>
+          <span>on the route.</span>
+        </h1>
+        <p className="lead">The page you asked for isn’t one of ours.</p>
         <p>
-          <Link prefetch={false} className="btn btn--coral btn--lg" href="/">
-            Back to the van
+          <Link prefetch={false} className="btn btn--solid" href="/">
+            Back to the route
           </Link>
         </p>
       </div>

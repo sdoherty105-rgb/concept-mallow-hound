@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 
 const PAGES = [
   { path: "/", h1: /The groom\s*comes to you\./i },
-  { path: "/packages", h1: /What’s included, and what it costs/ },
+  { path: "/packages", h1: /The full menu/ },
 ];
 const LABEL = "An OFF/SHIFT concept — fictional demonstration";
 const LABEL_URL = "https://offshiftstudio.com.au/concepts/mallow-hound";
@@ -72,7 +72,7 @@ test("unknown routes show a friendly 404 that is also labelled and noindex", asy
 
 test("home has every requested section", async ({ page }) => {
   await page.goto("/");
-  for (const id of ["how", "packages", "coat", "area", "calm", "booking", "faq"]) {
+  for (const id of ["area", "how", "coat", "packages", "booking", "faq"]) {
     await expect(page.locator(`section#${id}`)).toHaveCount(1);
   }
   await expect(page.locator("footer")).toBeVisible();
@@ -83,13 +83,17 @@ test("coat selector updates package, time and price", async ({ page }) => {
   const result = page.locator(".result");
   await expect(result).toContainText("The Full Mallow");
   await expect(result).toContainText("$139");
-  await page.getByLabel(/Double & fluffy/).check({ force: true });
-  await page.getByLabel(/Giant/).check({ force: true });
+  await page.getByLabel(/Double & fluffy/).click({ force: true });
+  await expect(page.getByLabel(/Double & fluffy/)).toBeChecked();
+  await page.getByLabel(/Giant/).click({ force: true });
+  await expect(page.getByLabel(/^Giant/)).toBeChecked();
   await expect(result).toContainText("Shed Less");
   await expect(result).toContainText("$204");
   await expect(result).toContainText("3 hr 15 min");
-  await page.getByLabel(/Short & smooth/).check({ force: true });
-  await page.getByLabel(/^Small/).check({ force: true });
+  await page.getByLabel(/Short & smooth/).click({ force: true });
+  await expect(page.getByLabel(/Short & smooth/)).toBeChecked();
+  await page.getByLabel(/^Small/).click({ force: true });
+  await expect(page.getByLabel(/^Small/)).toBeChecked();
   await expect(result).toContainText("Fresh Start");
   await expect(result).toContainText("$79");
 });
@@ -120,8 +124,10 @@ test("service area check answers for covered, outer and unknown suburbs", async 
 
 test("selector choices prefill the booking form", async ({ page }) => {
   await page.goto("/");
-  await page.getByLabel(/Long & silky/).check({ force: true });
-  await page.getByLabel(/^Large/).check({ force: true });
+  await page.getByLabel(/Long & silky/).click({ force: true });
+  await expect(page.getByLabel(/Long & silky/)).toBeChecked();
+  await page.getByLabel(/^Large/).click({ force: true });
+  await expect(page.getByLabel(/^Large/)).toBeChecked();
   await page.getByRole("link", { name: "Book this groom" }).click();
   await expect(page.locator('select[name="coat"]')).toHaveValue("long");
   await expect(page.locator('select[name="size"]')).toHaveValue("large");
@@ -198,12 +204,15 @@ test("no third-party requests are made on load", async ({ page }) => {
   expect(external).toEqual([]);
 });
 
-test("reduced motion disables animations", async ({ browser }) => {
+test("reduced motion parks a static van instead of travelling", async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: "reduce" });
   const page = await ctx.newPage();
   await page.goto("/");
-  const name = await page.locator(".bubble").first().evaluate((el) => getComputedStyle(el).animationName);
+  const name = await page.locator(".route-van").evaluate((el) => getComputedStyle(el).animationName);
   expect(name).toBe("none");
+  await expect(page.locator(".stop-van").first()).toBeVisible();
+  const hero = await page.locator(".hero-van").evaluate((el) => getComputedStyle(el).animationName);
+  expect(hero).toBe("none");
   await ctx.close();
 });
 

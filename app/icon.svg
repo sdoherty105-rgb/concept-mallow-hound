@@ -1,1 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><circle cx="24" cy="24" r="22" fill="#C9B6E4" stroke="#34303B" stroke-width="3"/><g fill="#FFF7EB" stroke="#34303B" stroke-width="2.4" stroke-linejoin="round"><ellipse cx="24" cy="29" rx="9" ry="7.5"/><ellipse cx="13" cy="21" rx="3.6" ry="4.8" transform="rotate(-20 13 21)"/><ellipse cx="19.5" cy="14.5" rx="3.6" ry="4.8" transform="rotate(-6 19.5 14.5)"/><ellipse cx="28.5" cy="14.5" rx="3.6" ry="4.8" transform="rotate(6 28.5 14.5)"/><ellipse cx="35" cy="21" rx="3.6" ry="4.8" transform="rotate(20 35 21)"/></g><circle cx="24" cy="29" r="3.4" fill="#ED917A"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <rect width="48" height="48" fill="#FFD84D"/>
+  <rect x="4" y="16" width="28" height="14" rx="2" fill="#2A3DF0"/>
+  <rect x="28" y="20" width="16" height="10" rx="2" fill="#2A3DF0"/>
+  <rect x="32" y="22" width="8" height="4" fill="#FFF9EE"/>
+  <rect x="6" y="21" width="14" height="3" fill="#7DE0B5"/>
+  <circle cx="14" cy="32" r="3.5" fill="#3B1C6B"/>
+  <circle cx="36" cy="32" r="3.5" fill="#3B1C6B"/>
+  <rect x="40" y="26" width="4" height="3" fill="#FF6A2B"/>
+</svg>
