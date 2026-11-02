@@ -71,7 +71,16 @@ export function SiteNav() {
         <a className="pill pill--pin" href="/#area">
           <span className="pill__l">Suburb</span>
         </a>
-        {list("mobile-stops__list")}
+        {STOPS.map((stop) => {
+          const on = current === stop.id;
+          const page = onMenu && stop.id === "packages";
+          return (
+            <a key={stop.id} className={`pill${on ? " is-on" : ""}`} href={hrefFor(stop.id)} aria-current={on ? (page ? "page" : "location") : undefined}>
+              <span className="pill__n">{stop.n}</span>
+              <span className="pill__l">{stop.label}</span>
+            </a>
+          );
+        })}
       </nav>
     </>
   );

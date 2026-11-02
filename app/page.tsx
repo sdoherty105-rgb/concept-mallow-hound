@@ -4,7 +4,7 @@ import { MenuTickets } from "@/components/MenuTickets";
 import { RouteProvider } from "@/components/RouteState";
 import { RouteVan } from "@/components/RouteVan";
 import { ServiceCheck } from "@/components/ServiceCheck";
-import { StopVan, VanCutaway } from "@/components/Van";
+import { StopMark, VanCutaway } from "@/components/Van";
 import { DEMO_PROMISE, FAQS, PROMISES } from "@/lib/data";
 
 const FEATURES = [
@@ -20,7 +20,7 @@ export default function HomePage() {
       <RouteVan />
       <RouteProvider>
         <section id="area" className="stop stop--butter" data-layout="stop-hero" aria-labelledby="hero-title">
-          <StopVan />
+          <StopMark n="0" />
           <div className="stop__inner hero-screen">
             <div className="hero-copy">
               <p className="kicker">Mobile dog grooming, Perth</p>
@@ -36,7 +36,7 @@ export default function HomePage() {
         </section>
 
         <section id="how" className="stop stop--cobalt" data-layout="stop-cutaway" aria-labelledby="how-title">
-          <StopVan />
+          <StopMark n="1" />
           <div className="stop__inner how-split">
             <div className="how-art">
               <VanCutaway />
@@ -72,7 +72,7 @@ export default function HomePage() {
         </section>
 
         <section id="coat" className="stop stop--grape" data-layout="stop-coats" aria-labelledby="coat-title">
-          <StopVan />
+          <StopMark n="2" />
           <div className="stop__inner">
             <p className="kicker">Stop 2</p>
             <h2 id="coat-title" className="h-step">
@@ -85,7 +85,7 @@ export default function HomePage() {
         </section>
 
         <section id="packages" className="stop stop--paper" data-layout="stop-tickets" aria-labelledby="menu-title">
-          <StopVan />
+          <StopMark n="3" />
           <div className="stop__inner">
             <p className="kicker">Stop 3</p>
             <h2 id="menu-title" className="h-step">
@@ -98,7 +98,7 @@ export default function HomePage() {
         </section>
 
         <section id="booking" className="stop stop--mint" data-layout="stop-week" aria-labelledby="book-title">
-          <StopVan />
+          <StopMark n="4" />
           <div className="stop__inner book-split">
             <div>
               <p className="kicker">Stop 4</p>
@@ -113,7 +113,7 @@ export default function HomePage() {
         </section>
 
         <section id="faq" className="stop stop--paper stop--faq" data-layout="stop-strips" aria-labelledby="faq-title">
-          <StopVan />
+          <StopMark n="5" />
           <div className="stop__inner">
             <p className="kicker">Stop 5</p>
             <h2 id="faq-title" className="h-step">

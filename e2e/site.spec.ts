@@ -115,6 +115,7 @@ test("service area check answers for covered, outer and unknown suburbs", async 
   const out = page.locator(".check__out");
   await input.fill("Mallow Bay");
   await expect(out).toContainText("Yes, we come to Mallow Bay");
+  await expect(page.locator(".van-panel")).toHaveText("Mallow Bay");
   await expect(out).toContainText("no travel fee");
   await input.fill("Pelican Hill");
   await expect(out).toContainText("$15 travel fee");

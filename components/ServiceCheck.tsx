@@ -112,7 +112,7 @@ export function ServiceCheck() {
       <div className="hero-stage">
         <div className="hero-van">
           <VanArt />
-          <p className="van-panel" aria-hidden="true">
+          <p className="van-panel" data-suburb={active ?? ""}>
             {panel}
           </p>
         </div>

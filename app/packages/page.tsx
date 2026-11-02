@@ -15,8 +15,6 @@ const DOG: Record<string, CoatId> = {
   "puppy-debut": "wiry",
 };
 
-const TINT = ["butter", "mint", "paper", "cobalt"] as const;
-
 export default function PackagesPage() {
   return (
     <>
@@ -76,32 +74,101 @@ export default function PackagesPage() {
         </div>
       </section>
 
-      {PACKAGES.map((pack, index) => (
-        <section key={pack.id} id={pack.id} className={`band band--${TINT[index]}`} data-layout="menu-band" aria-labelledby={`${pack.id}-title`}>
-          <div className="band__inner">
-            <div className="band__art" aria-hidden="true">
-              {pack.id === "puppy-debut" ? <PuppyMark /> : <Dog coat={DOG[pack.id]} />}
-            </div>
-            <div className="band__copy">
+      {PACKAGES.map((pack) => {
+        const art = pack.id === "puppy-debut" ? <PuppyMark /> : <Dog coat={DOG[pack.id]} />;
+        const price = (
+          <p className="menu-price">
+            <span className="demo-flag">Demonstration price</span>
+            <strong>${pack.basePrice}</strong>
+            <small>about {formatDuration(pack.baseMinutes)} for the smallest dogs</small>
+          </p>
+        );
+        const includes = (
+          <ul className="menu-includes">
+            {pack.includes.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        );
+        if (pack.id === "fresh-start") {
+          return (
+            <section key={pack.id} id={pack.id} className="menu-piece menu-piece--price" data-layout="menu-price" aria-labelledby={`${pack.id}-title`}>
+              <div className="menu-piece__pad">
+                {price}
+                <div>
+                  <h2 id={`${pack.id}-title`}>{pack.name}</h2>
+                  <p>{pack.tagline}</p>
+                  <p>
+                    <strong>Best for:</strong> {pack.bestFor}
+                  </p>
+                  {includes}
+                </div>
+                <div className="menu-piece__dog" aria-hidden="true">
+                  {art}
+                </div>
+              </div>
+            </section>
+          );
+        }
+        if (pack.id === "full-mallow") {
+          return (
+            <section key={pack.id} id={pack.id} className="menu-piece menu-piece--flip" data-layout="menu-flip" aria-labelledby={`${pack.id}-title`}>
+              <div className="menu-piece__pad">
+                <div>
+                  <h2 id={`${pack.id}-title`}>{pack.name}</h2>
+                  <p>{pack.tagline}</p>
+                  {includes}
+                  <p>
+                    <strong>Best for:</strong> {pack.bestFor}
+                  </p>
+                </div>
+                <div className="menu-piece__side">
+                  <div className="menu-piece__dog" aria-hidden="true">
+                    {art}
+                  </div>
+                  {price}
+                </div>
+              </div>
+            </section>
+          );
+        }
+        if (pack.id === "shed-less") {
+          return (
+            <section key={pack.id} id={pack.id} className="menu-piece menu-piece--ledger" data-layout="menu-rows" aria-labelledby={`${pack.id}-title`}>
+              <div className="menu-piece__pad">
+                <div className="menu-piece__head">
+                  <h2 id={`${pack.id}-title`}>{pack.name}</h2>
+                  <div className="menu-piece__dog menu-piece__dog--tiny" aria-hidden="true">
+                    {art}
+                  </div>
+                  {price}
+                </div>
+                <p>{pack.tagline}</p>
+                {includes}
+                <p>
+                  <strong>Best for:</strong> {pack.bestFor}
+                </p>
+              </div>
+            </section>
+          );
+        }
+        return (
+          <section key={pack.id} id={pack.id} className="menu-piece menu-piece--stack" data-layout="menu-stack" aria-labelledby={`${pack.id}-title`}>
+            <div className="menu-piece__pad">
+              <div className="menu-piece__dog" aria-hidden="true">
+                {art}
+              </div>
               <h2 id={`${pack.id}-title`}>{pack.name}</h2>
               <p>{pack.tagline}</p>
-              <ul className="band__includes">
-                {pack.includes.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
+              {price}
+              {includes}
               <p>
                 <strong>Best for:</strong> {pack.bestFor}
               </p>
             </div>
-            <p className="band__price">
-              <span className="demo-flag">Demonstration price</span>
-              <strong>${pack.basePrice}</strong>
-              <small>about {formatDuration(pack.baseMinutes)} for the smallest dogs</small>
-            </p>
-          </div>
-        </section>
-      ))}
+          </section>
+        );
+      })}
 
       <section className="stop stop--grape" data-layout="menu-extras" aria-labelledby="extras-title">
         <div className="stop__inner extras">

@@ -4,7 +4,7 @@ Every asset in this repository, with its source and licence. Prices, suburbs, vi
 
 | Asset | Where | Source | Licence |
 | --- | --- | --- | --- |
-| Dog coat silhouettes (short, double, curly, long, wiry) and the puppy silhouette | `components/Dogs.tsx` | Original SVG drawn in code for this concept by OFF/SHIFT Studio. One construction rule: body ellipse, head circle, two ears, four legs, one tail. No faces. | Original work, owned by OFF/SHIFT Studio |
+| Dog coat illustrations (short, double, curly, long, wiry) and the puppy | `components/Dogs.tsx` | Original SVG drawn in code for this concept by OFF/SHIFT Studio. Side-profile hounds, a different silhouette for each coat, no faces. | Original work, owned by OFF/SHIFT Studio |
 | Geometric van, margin van and cutaway interior | `components/Van.tsx` | Original SVG drawn in code for this concept. The hero van is eight flat shapes. | Original work, owned by OFF/SHIFT Studio |
 | Favicon | `app/icon.svg` | Original SVG, the same van reduced to flat shapes | Original work, owned by OFF/SHIFT Studio |
 | Bricolage Grotesque variable, Latin subset, axes opsz, wdth and wght | `app/fonts/BricolageGrotesque-latin.woff2` | [Bricolage Grotesque](https://github.com/ateliertriay/bricolage), file taken from [google/fonts](https://github.com/google/fonts/tree/main/ofl/bricolagegrotesque) `BricolageGrotesque[opsz,wdth,wght].ttf` and subset with fonttools to Basic Latin plus typographic punctuation. Full licence text: `app/fonts/OFL-Bricolage.txt`. No Reserved Font Name is declared. | SIL Open Font License 1.1 |

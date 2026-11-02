@@ -7,7 +7,7 @@ export function VanArt() {
       <rect x="470" y="92" width="230" height="98" rx="14" fill="#2A3DF0" />
       <rect x="520" y="108" width="132" height="48" fill="#FFF9EE" />
       <rect className="van-stripe" x="24" y="132" width="446" height="24" fill="var(--accent)" />
-      <rect x="52" y="78" width="280" height="46" rx="6" fill="#FFF9EE" />
+      <rect x="40" y="74" width="410" height="50" rx="6" fill="#FFF9EE" />
       <circle cx="170" cy="198" r="34" fill="#3B1C6B" />
       <circle cx="575" cy="198" r="34" fill="#3B1C6B" />
       <rect x="668" y="150" width="28" height="16" rx="3" fill="#FF6A2B" />
@@ -61,10 +61,13 @@ export function VanCutaway() {
   );
 }
 
-export function StopVan() {
+export function StopMark({ n }: { n: string }) {
   return (
-    <div className="stop-van" aria-hidden="true">
-      <MiniVan />
+    <div className="stop-mark" aria-hidden="true">
+      <span className="stop-mark__n">{n}</span>
+      <span className="stop-van">
+        <MiniVan />
+      </span>
     </div>
   );
 }
