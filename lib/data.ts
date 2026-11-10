@@ -225,6 +225,32 @@ export function recommend(coatId: CoatId, sizeId: SizeId): Recommendation {
   };
 }
 
+export interface Estimate {
+  package: GroomPackage;
+  /** True when the visitor left the package on "recommend one". */
+  recommended: boolean;
+  groom: number;
+  travel: number;
+  total: number;
+  minutes: number;
+}
+
+/**
+ * The booking estimate. It honours a package the visitor picked (Puppy Debut is
+ * a flat price, as the menu says) and adds the outer-zone travel fee for the suburb.
+ */
+export function estimate(coatId: CoatId, sizeId: SizeId, packageId?: string, suburbName?: string): Estimate {
+  const rec = recommend(coatId, sizeId);
+  const chosen = PACKAGES.find((pack) => pack.id === packageId);
+  const pack = chosen ?? rec.package;
+  const flat = pack.id === "puppy-debut";
+  const groom = flat ? pack.basePrice : pack.basePrice + rec.size.priceAdd;
+  const minutes = flat ? pack.baseMinutes : roundToFive(pack.baseMinutes * rec.size.timeFactor * rec.coat.timeFactor);
+  const suburb = SUBURBS.find((item) => item.name === suburbName);
+  const travel = suburb ? ZONE_FEES[suburb.zone] : 0;
+  return { package: pack, recommended: !chosen, groom, travel, total: groom + travel, minutes };
+}
+
 export function formatDuration(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;

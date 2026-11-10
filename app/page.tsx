@@ -59,14 +59,17 @@ export default function HomePage() {
                   </li>
                 ))}
               </ol>
-              <p className="demo-flag demo-flag--on-dark">{DEMO_PROMISE}</p>
-              <ul className="promise-line">
-                {PROMISES.slice(0, 4).map((promise) => (
-                  <li key={promise.title}>
-                    <strong>{promise.title}.</strong> {promise.body}
-                  </li>
-                ))}
-              </ul>
+              <details className="promise-fold">
+                <summary>How we handle a nervous dog</summary>
+                <ul className="promise-line">
+                  {PROMISES.slice(0, 4).map((promise) => (
+                    <li key={promise.title}>
+                      <strong>{promise.title}.</strong> {promise.body}
+                    </li>
+                  ))}
+                </ul>
+                <p className="demo-flag demo-flag--on-dark">{DEMO_PROMISE}</p>
+              </details>
             </div>
           </div>
         </section>

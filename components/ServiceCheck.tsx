@@ -26,7 +26,7 @@ function ZoneList({ zone, active, onPick }: { zone: Zone; active?: string; onPic
 
 function Result({ res, onWaitlist }: { res: SuburbCheck; onWaitlist: () => void }) {
   if (res.kind === "empty") {
-    return <p className="check__hint">The side panel stays blank until a suburb is named.</p>;
+    return <p className="check__hint">Name a suburb and the van shows it on the side panel, with the day it visits.</p>;
   }
   if (res.kind === "covered") {
     const fee = ZONE_FEES[res.suburb.zone];

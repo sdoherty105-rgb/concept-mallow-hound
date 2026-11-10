@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { COATS, DEMO_SLOTS, PACKAGES, SIZES, SUBURBS, formatDuration, recommend, type CoatId, type SizeId } from "@/lib/data";
+import { COATS, DEMO_SLOTS, PACKAGES, SIZES, SUBURBS, estimate, formatDuration, type CoatId, type SizeId } from "@/lib/data";
 import { EMPTY, ORDER, validate, type Errors, type Values } from "@/lib/booking";
 import { PREFILL_EVENT, useHydrated, type PrefillDetail } from "@/lib/hydrated";
 
@@ -12,6 +12,13 @@ function isoFromDate(date: Date) {
 
 function todayIso() {
   return isoFromDate(new Date());
+}
+
+const WINDOWS: Record<string, string> = { morning: "Morning", midday: "Midday", afternoon: "Afternoon" };
+
+function longDay(iso: string) {
+  if (!iso) return "";
+  return new Intl.DateTimeFormat("en-AU", { weekday: "long", day: "numeric", month: "long" }).format(new Date(`${iso}T12:00:00`));
 }
 
 export function BookingForm() {
@@ -81,12 +88,12 @@ export function BookingForm() {
   };
 
   const focusField = (key: keyof Values) => {
-    const el = formRef.current?.querySelector<HTMLElement>(`[name="${key}"]`);
+    const el = formRef.current?.querySelector<HTMLElement>(`[name="${key}"]:not(:disabled)`);
     el?.focus();
   };
 
   const errorList = ORDER.filter((key) => errors[key]);
-  const rec = values.coat && values.size ? recommend(values.coat as CoatId, values.size as SizeId) : null;
+  const est = values.coat && values.size ? estimate(values.coat as CoatId, values.size as SizeId, values.packageId, values.suburb) : null;
 
   const reset = () => {
     setValues(EMPTY);
@@ -96,8 +103,7 @@ export function BookingForm() {
   };
 
   if (done) {
-    const pack = PACKAGES.find((item) => item.id === done.packageId);
-    const doneRec = done.coat && done.size ? recommend(done.coat as CoatId, done.size as SizeId) : null;
+    const doneEst = estimate(done.coat as CoatId, done.size as SizeId, done.packageId, done.suburb);
     return (
       <div className="success" ref={successRef} tabIndex={-1} role="status">
         <p className="eyebrow">Demo only</p>
@@ -117,22 +123,24 @@ export function BookingForm() {
           </div>
           <div>
             <dt>Package</dt>
-            <dd>{pack ? pack.name : doneRec ? `${doneRec.package.name} (recommended)` : "We’d recommend one"}</dd>
+            <dd>
+              {doneEst.package.name}
+              {doneEst.recommended ? " (recommended)" : ""}
+            </dd>
           </div>
           <div>
             <dt>Preferred day</dt>
             <dd>
-              {done.date}, {done.window}
+              {longDay(done.date)}, {WINDOWS[done.window]?.toLowerCase()}
             </dd>
           </div>
-          {doneRec && (
-            <div>
-              <dt>Estimate</dt>
-              <dd>
-                ${doneRec.price} · {formatDuration(doneRec.minutes)}
-              </dd>
-            </div>
-          )}
+          <div>
+            <dt>Demonstration estimate</dt>
+            <dd>
+              ${doneEst.total}
+              {doneEst.travel ? ` incl. $${doneEst.travel} travel` : ""}, about {formatDuration(doneEst.minutes)}
+            </dd>
+          </div>
         </dl>
         <button type="button" className="btn" onClick={reset}>
           Try the demo again
@@ -147,23 +155,34 @@ export function BookingForm() {
         <strong>Demo form.</strong> It checks your answers in the browser, then shows a pretend confirmation. Nothing is sent anywhere.
       </p>
 
-      <fieldset className="fs days-set">
-        <legend>{DEMO_SLOTS}</legend>
+      <fieldset className={`fs days-set${errors.date ? " has-error" : ""}`} aria-describedby={errors.date ? `${id("date")}-err` : id("days-note")}>
+        <legend>Pick a day</legend>
+        <p className="days-note" id={id("days-note")}>
+          {DEMO_SLOTS} Sundays the van rests.
+        </p>
         <div className="days">
           {days.map((day) => (
-            <button
-              key={day.iso}
-              type="button"
-              className={`day${values.date === day.iso ? " is-on" : ""}`}
-              disabled={!hydrated || day.resting}
-              aria-pressed={day.resting ? undefined : values.date === day.iso}
-              onClick={() => set("date", day.iso)}
-            >
-              <span>{day.label}</span>
-              {day.resting && <small>Resting</small>}
-            </button>
+            <label key={day.iso} className={`day${day.resting ? " day--rest" : ""}`}>
+              <input
+                type="radio"
+                name="date"
+                value={day.iso}
+                checked={values.date === day.iso}
+                disabled={!hydrated || day.resting}
+                onChange={() => set("date", day.iso)}
+              />
+              <span className="day__face">
+                <span>{day.label}</span>
+                {day.resting && <small>Resting</small>}
+              </span>
+            </label>
           ))}
         </div>
+        {errors.date && (
+          <p className="field__error" id={`${id("date")}-err`}>
+            {errors.date}
+          </p>
+        )}
       </fieldset>
 
       {errorList.length > 0 && (
@@ -305,19 +324,6 @@ export function BookingForm() {
               ))}
             </select>
           </Field>
-          <Field id={id("date")} label="Preferred day" error={errors.date}>
-            <input
-              id={id("date")}
-              name="date"
-              className="input"
-              type="date"
-              min={today || undefined}
-              value={values.date}
-              onChange={(event) => set("date", event.target.value)}
-              aria-invalid={!!errors.date}
-              aria-describedby={errors.date ? `${id("date")}-err` : undefined}
-            />
-          </Field>
           <div className="field">
             <span className="field__label" id={id("window-l")}>
               Arrival window
@@ -336,11 +342,18 @@ export function BookingForm() {
             </div>
           </div>
         </div>
-        {rec && (
-          <p className="booking__estimate" role="status">
-            Estimate: <strong>{rec.package.name}</strong>, ${rec.price}, about {formatDuration(rec.minutes)}. Demonstration figure.
-          </p>
-        )}
+        <div className="booking__estimate" aria-live="polite">
+          {est ? (
+            <p>
+              Estimate: <strong>{est.package.name}</strong>
+              {est.recommended ? " (recommended)" : ""}, ${est.groom}
+              {est.travel ? ` + $${est.travel} outer-zone travel = $${est.total}` : ""}, about {formatDuration(est.minutes)}. Demonstration
+              figure.
+            </p>
+          ) : (
+            <p>Choose a coat and size to see a demonstration estimate.</p>
+          )}
+        </div>
         <label className="check-line">
           <input type="checkbox" name="anxious" checked={values.anxious} onChange={(event) => set("anxious", event.target.checked)} />
           <span>My dog gets nervous. Please allow extra time and a gentle start.</span>

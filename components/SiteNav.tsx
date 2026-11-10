@@ -11,6 +11,14 @@ const STOPS = [
   { id: "faq", n: "5", label: "Questions" },
 ] as const;
 
+/** Phones get the four stops that move a booking forward, in one row. */
+const MOBILE = [
+  { id: "area", label: "Suburb" },
+  { id: "coat", label: "Price" },
+  { id: "packages", label: "Menu" },
+  { id: "booking", label: "Book" },
+] as const;
+
 export function SiteNav() {
   const pathname = usePathname();
   const onMenu = pathname === "/packages";
@@ -21,7 +29,7 @@ export function SiteNav() {
       setCurrent("packages");
       return;
     }
-    const nodes = STOPS.map((stop) => document.getElementById(stop.id)).filter((node): node is HTMLElement => !!node);
+    const nodes = ["area", ...STOPS.map((stop) => stop.id)].map((id) => document.getElementById(id)).filter((node): node is HTMLElement => !!node);
     if (!nodes.length) return;
     const ratios = new Map<string, number>();
     const observer = new IntersectionObserver(
@@ -67,17 +75,13 @@ export function SiteNav() {
       <nav className="stop-nav" aria-label="Primary" data-nav="stop-pills">
         {list("stop-nav__list")}
       </nav>
-      <nav className="mobile-stops" aria-label="Stops">
-        <a className="pill pill--pin" href="/#area">
-          <span className="pill__l">Suburb</span>
-        </a>
-        {STOPS.map((stop) => {
+      <nav className="mobile-stops" aria-label="Quick stops">
+        {MOBILE.map((stop) => {
           const on = current === stop.id;
           const page = onMenu && stop.id === "packages";
           return (
-            <a key={stop.id} className={`pill${on ? " is-on" : ""}`} href={hrefFor(stop.id)} aria-current={on ? (page ? "page" : "location") : undefined}>
-              <span className="pill__n">{stop.n}</span>
-              <span className="pill__l">{stop.label}</span>
+            <a key={stop.id} className={`pill${on ? " is-on" : ""}${stop.id === "booking" ? " pill--go" : ""}`} href={hrefFor(stop.id)} aria-current={on ? (page ? "page" : "location") : undefined}>
+              {stop.label}
             </a>
           );
         })}

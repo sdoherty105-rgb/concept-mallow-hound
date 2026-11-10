@@ -146,6 +146,35 @@ test("selector choices prefill the booking form", async ({ page }) => {
   await expect(page.locator('select[name="packageId"]')).toHaveValue("full-mallow");
 });
 
+test("a chosen package changes the estimate and Sundays cannot be booked", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  await page.getByLabel("Coat type").selectOption("curly");
+  await page.getByLabel("Size", { exact: true }).selectOption("large");
+  await expect(page.locator(".booking__estimate")).toContainText("The Full Mallow (recommended), $164");
+  await page.getByLabel("Package").selectOption("puppy-debut");
+  await expect(page.locator(".booking__estimate")).toContainText("Puppy Debut, $59");
+  const days = page.locator('input[name="date"]');
+  await expect(days).toHaveCount(7);
+  await expect(page.locator(".day--rest input")).toBeDisabled();
+  await page.getByRole("button", { name: /Request a groom/ }).click();
+  await page.getByRole("button", { name: "Pick the day you’d like." }).click();
+  await expect(page.locator('input[name="date"]:not(:disabled)').first()).toBeFocused();
+});
+
+test("phones get a single-row stop bar that never covers the footer links", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "mobile only");
+  await page.goto("/");
+  const bar = page.getByRole("navigation", { name: "Quick stops" });
+  await expect(bar.getByRole("link")).toHaveText(["Suburb", "Price", "Menu", "Book"]);
+  const box = await bar.boundingBox();
+  expect(box!.height).toBeLessThan(72);
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  const cta = page.locator("body > footer").getByRole("link", { name: "Want a website like this?" });
+  const ctaBox = await cta.boundingBox();
+  expect(ctaBox!.y + ctaBox!.height).toBeLessThanOrEqual(box!.y);
+});
+
 test("FAQ items expand", async ({ page }) => {
   await page.goto("/");
   const first = page.locator(".faq__item").first();
@@ -175,11 +204,12 @@ test.describe("demo booking form", () => {
     await page.getByLabel("Your name").fill("Sam Example");
     await page.getByRole("textbox", { name: "Mobile", exact: true }).fill("0400 000 000");
     await page.getByLabel("Email", { exact: true }).fill("sam@example.com");
-    await page.getByLabel("Suburb", { exact: true }).selectOption("Mallow Bay");
+    await page.getByLabel("Suburb", { exact: true }).selectOption("Pelican Hill");
     await page.getByLabel("Dog’s name").fill("Biscuit");
     await page.getByLabel("Coat type").selectOption("curly");
     await page.getByLabel("Size", { exact: true }).selectOption("small");
-    await page.getByLabel("Preferred day").fill("2099-01-15");
+    await expect(page.locator(".booking__estimate")).toContainText("$119 + $15 outer-zone travel = $134");
+    await page.locator('input[name="date"]:not(:disabled)').first().check({ force: true });
     await page.getByLabel(/I understand this is a fictional demo/).check();
     await page.getByRole("button", { name: /Request a groom/ }).click();
 
@@ -188,6 +218,8 @@ test.describe("demo booking form", () => {
     await expect(success).toContainText("Demo only");
     await expect(success).toContainText("Nothing was sent, saved or stored");
     await expect(success).toContainText("Biscuit");
+    await expect(success).toContainText("$134 incl. $15 travel");
+    await expect(success).not.toContainText(/\d{4}-\d{2}-\d{2}/);
     await page.waitForTimeout(500);
     expect(requests).toEqual([]);
     expect(navigations).toBe(0);
