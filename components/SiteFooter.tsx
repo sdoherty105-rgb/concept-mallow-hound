@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CONCEPT_LABEL, CONCEPT_URL, HOURS } from "@/lib/data";
+import { BACK_LABEL, CONCEPT_URL, CTA_LABEL, DISCLOSURE, HOURS, STUDIO_CONTACT_URL } from "@/lib/data";
 
 export function SiteFooter() {
   return (
@@ -55,13 +55,16 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="depot__legal">
-        <p>
-          <a href={CONCEPT_URL} target="_blank" rel="noopener noreferrer">
-            {CONCEPT_LABEL}
-            <span className="visually-hidden"> (opens in a new tab)</span>
+        <p className="depot__disclosure">
+          <strong>{DISCLOSURE}</strong> Mallow Hound is not a real business. Prices, suburbs, visit windows and promises are invented, and
+          nothing on this site is sent anywhere.
+        </p>
+        <p className="depot__studio">
+          <a href={CONCEPT_URL}>{BACK_LABEL}</a>
+          <a className="depot__cta" href={STUDIO_CONTACT_URL}>
+            {CTA_LABEL}
           </a>
         </p>
-        <p>Mallow Hound is not a real business. Prices, suburbs, visit windows and promises are invented for this OFF/SHIFT Studio concept.</p>
       </div>
     </footer>
   );

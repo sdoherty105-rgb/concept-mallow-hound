@@ -1,6 +1,10 @@
 export const CONCEPT_SLUG = "mallow-hound";
 export const CONCEPT_URL = `https://offshiftstudio.com.au/concepts/${CONCEPT_SLUG}`;
 export const CONCEPT_LABEL = "An OFF/SHIFT concept — fictional demonstration";
+export const STUDIO_CONTACT_URL = `https://offshiftstudio.com.au/?concept=${CONCEPT_SLUG}#contact`;
+export const DISCLOSURE = "Fictional business. A concept site by OFF/SHIFT Studio.";
+export const BACK_LABEL = "Back to the concept";
+export const CTA_LABEL = "Want a website like this?";
 
 export const DEMO_PRICE = "Demonstration price. Invented for this concept, not a quote.";
 export const DEMO_SCHEDULE = "Demonstration schedule. Not a live timetable.";

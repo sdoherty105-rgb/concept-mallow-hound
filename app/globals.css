@@ -91,12 +91,35 @@ button, input, select, textarea { font: inherit; color: var(--grape); color-sche
 .skip-link:focus { top: 0.75rem; }
 
 .road-sign {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem 1.25rem;
   background: var(--grape);
-  color: var(--butter);
-  padding: 0.55rem 1rem 0.55rem 1.2rem;
+  color: var(--paper);
+  padding: 0.45rem 1rem 0.45rem 1.2rem;
+  font-size: 0.95rem;
+  line-height: 1.3;
 }
 .road-sign p { margin: 0; }
-.road-sign a { color: inherit; font-weight: 700; }
+.road-sign__links { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 1rem; }
+.road-sign a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  color: var(--butter);
+  font-weight: 700;
+}
+.road-sign .road-sign__cta {
+  padding: 0.1rem 0.75rem;
+  border-radius: 999px;
+  background: var(--butter);
+  color: var(--grape);
+  text-decoration: none;
+}
+.road-sign .road-sign__cta:hover { text-decoration: underline; }
+.road-sign :focus-visible { outline-color: var(--butter); }
 
 .site-header {
   position: sticky;
@@ -131,7 +154,7 @@ button, input, select, textarea { font: inherit; color: var(--grape); color-sche
 
 .pill {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.35rem;
   min-height: 48px;
   padding: 0.35rem 0.85rem;
@@ -625,6 +648,17 @@ button, input, select, textarea { font: inherit; color: var(--grape); color-sche
   padding: 1rem 0.5rem 2rem;
   border-top: 2px solid var(--butter);
 }
+.depot__disclosure { max-width: 46rem; }
+.depot__studio { display: flex; flex-wrap: wrap; gap: 0.6rem 1.25rem; align-items: center; margin: 0; }
+.depot__studio a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 800; }
+.depot .depot__cta {
+  padding: 0.2rem 1rem;
+  border-radius: 999px;
+  background: var(--butter);
+  color: var(--grape);
+  text-decoration: none;
+}
+.depot .depot__cta:hover { text-decoration: underline; }
 
 .menu-mast { background: var(--cobalt); color: var(--white); }
 .menu-mast__lead { max-width: 36rem; font-size: 1.15rem; }

@@ -5,8 +5,10 @@ const PAGES = [
   { path: "/", h1: /The groom\s*comes to you\./i },
   { path: "/packages", h1: /The full menu/ },
 ];
-const LABEL = "An OFF/SHIFT concept — fictional demonstration";
+const DISCLOSURE = "Fictional business. A concept site by OFF/SHIFT Studio.";
+const LABEL = DISCLOSURE;
 const LABEL_URL = "https://offshiftstudio.com.au/concepts/mallow-hound";
+const CTA_URL = "https://offshiftstudio.com.au/?concept=mallow-hound#contact";
 
 for (const p of PAGES) {
   test.describe(`page ${p.path}`, () => {
@@ -20,11 +22,20 @@ for (const p of PAGES) {
       await expect(page.locator("body > footer")).toHaveCount(1);
     });
 
-    test("shows the concept label linking to OFF/SHIFT", async ({ page }) => {
+    test("discloses the fictional business and links back to OFF/SHIFT", async ({ page }) => {
       await page.goto(p.path);
-      const link = page.getByRole("link", { name: new RegExp(LABEL) }).first();
-      await expect(link).toBeVisible();
-      await expect(link).toHaveAttribute("href", LABEL_URL);
+      const strip = page.getByRole("complementary", { name: "About this concept site" });
+      await expect(strip).toContainText(DISCLOSURE);
+      const back = strip.getByRole("link", { name: "Back to the concept" });
+      await expect(back).toBeVisible();
+      await expect(back).toHaveAttribute("href", LABEL_URL);
+      const cta = strip.getByRole("link", { name: "Want a website like this?" });
+      await expect(cta).toBeVisible();
+      await expect(cta).toHaveAttribute("href", CTA_URL);
+      await expect(cta).not.toHaveAttribute("target", /.+/);
+      const footer = page.locator("body > footer");
+      await expect(footer.getByRole("link", { name: "Back to the concept" })).toHaveAttribute("href", LABEL_URL);
+      await expect(footer.getByRole("link", { name: "Want a website like this?" })).toHaveAttribute("href", CTA_URL);
     });
 
     test("is noindex by meta tag and by header", async ({ page }) => {
