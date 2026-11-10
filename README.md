@@ -5,7 +5,7 @@
 > An OFF/SHIFT concept — fictional demonstration. Not a real business. Nothing here is for sale, no forms send data, and every page is `noindex`.
 
 - Slug: `mallow-hound`
-- Future demo URL: `mallow-hound.offshiftstudio.com.au` (not configured; nothing is deployed from this repo)
+- Demo URL: https://mallow-hound.offshiftstudio.com.au (live; see Deployment status below)
 - Direction: 05 Colourful, “The route”. A scroll of colour-block stops. The van rides a dashed road in the margin. Playful, written for adults with dogs. Bricolage Grotesque (width 75, weight 800) and Atkinson Hyperlegible Next.
 - Palette: `#FFF9EE` paper, `#2A3DF0` cobalt, `#FFD84D` butter, `#7DE0B5` mint, `#FF6A2B` tangerine (fills and large display only), `#3B1C6B` grape.
 - Signature interactions: the suburb check types the answer on the van, and the coat picker re-themes the accent and lifts the matching ticket.
@@ -36,11 +36,17 @@ npm run lhci         # Lighthouse CI, mobile
 npm run cf:build     # OpenNext Worker bundle, build only
 ```
 
-Deployment is intentionally not part of this repository's workflow. `wrangler.jsonc` names the worker `concept-mallow-hound`; deploying and attaching a domain is a separate, manual step.
+## Deployment status (checked 2026-11-10)
+
+- https://mallow-hound.offshiftstudio.com.au is live on the Cloudflare Worker `concept-mallow-hound` (HTTP 200, `X-Robots-Tag: noindex, nofollow`).
+- It serves the **`main`** design (b3f8aff, PR #2: lavender/cream, "Calm promise" nav). The colour-block route redesign on `redesign/2026-11` (draft PR #3) is **not** deployed.
+- This repository has no deploy step: CI (`.github/workflows/ci.yml`) only builds, tests, runs Lighthouse and smoke-tests the Worker bundle locally. Whatever published `main` was configured outside this repo (Cloudflare dashboard). Pushes to `redesign/2026-11` since 2 Nov have not changed the live site.
+- To launch the redesign: merge PR #3, then deploy `main` the same way it was deployed before (`npm run cf:build`, then `npx wrangler deploy` by the owner), and confirm that the live home page shows the "Fictional business. A concept site by OFF/SHIFT Studio." strip.
+- https://offshiftstudio.com.au/concepts/mallow-hound (the "Back to the concept" target) returned 404 on 2026-11-10; it is owned by the studio repo.
 
 ## Rules this concept follows
 
-- Visible label on every page, linking to `https://offshiftstudio.com.au/concepts/mallow-hound`
+- A strip on every page (repeated in the footer) says the business is fictional and links to "Back to the concept" (`https://offshiftstudio.com.au/concepts/mallow-hound`) and "Want a website like this?" (`https://offshiftstudio.com.au/?concept=mallow-hound#contact`), both in the same tab
 - `noindex, nofollow` via meta tag, `X-Robots-Tag` header (`next.config.ts` and `public/_headers`) and `robots.txt`
 - No reviews, testimonials, ratings, statistics, awards or client logos
 - Forms are demo-only: client-side validation, a clear demo success state, no network request
