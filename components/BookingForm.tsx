@@ -156,7 +156,13 @@ export function BookingForm() {
       </p>
 
       <fieldset className={`fs days-set${errors.date ? " has-error" : ""}`} aria-describedby={errors.date ? `${id("date")}-err` : id("days-note")}>
-        <legend>Pick a day</legend>
+        <legend>
+          Pick a day
+          <span className="field__req" aria-hidden="true">
+            {" "}
+            (required)
+          </span>
+        </legend>
         <p className="days-note" id={id("days-note")}>
           {DEMO_SLOTS} Sundays the van rests.
         </p>
@@ -166,6 +172,7 @@ export function BookingForm() {
               <input
                 type="radio"
                 name="date"
+                required
                 value={day.iso}
                 checked={values.date === day.iso}
                 disabled={!hydrated || day.resting}
@@ -368,12 +375,19 @@ export function BookingForm() {
           <input
             type="checkbox"
             name="demoOk"
+            required
             checked={values.demoOk}
             onChange={(event) => set("demoOk", event.target.checked)}
             aria-invalid={!!errors.demoOk}
             aria-describedby={errors.demoOk ? `${id("demoOk")}-err` : undefined}
           />
-          <span>I understand this is a fictional demo and nothing will be sent.</span>
+          <span>
+            I understand this is a fictional demo and nothing will be sent.
+            <span className="field__req" aria-hidden="true">
+              {" "}
+              (required)
+            </span>
+          </span>
         </label>
         {errors.demoOk && (
           <p className="field__error" id={`${id("demoOk")}-err`}>

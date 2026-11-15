@@ -236,7 +236,7 @@ test.describe("demo booking form", () => {
   });
 });
 
-test("booking form marks exactly the required fields, visibly and with aria-required (M1)", async ({ page }) => {
+test("booking form marks exactly the required fields, visibly and with required semantics (M1)", async ({ page }) => {
   await page.goto("/");
   const form = page.locator("form.booking");
   const required = [
@@ -256,9 +256,21 @@ test("booking form marks exactly the required fields, visibly and with aria-requ
     await expect(form.locator(`label[for="${id}"]`)).toHaveText(`${label} (required)`);
     await expect(control).toHaveAccessibleName(label);
   }
-  await expect(form.locator(".field__req")).toHaveCount(7);
+  await expect(form.locator(".field__req")).toHaveCount(9);
+  // The day picker and the demo tick are required by validation too: native `required`
+  // (the form is noValidate, so the browser adds no popups) plus the same visible marker.
+  const days = form.locator('input[name="date"]');
+  expect(await days.count()).toBeGreaterThan(0);
+  for (const day of await days.all()) await expect(day).toHaveAttribute("required", "");
+  await expect(form.locator("fieldset.days-set legend")).toHaveText("Pick a day (required)");
+  await expect(form.getByRole("group", { name: "Pick a day", exact: true })).toBeVisible();
+  const demo = form.locator('input[name="demoOk"]');
+  await expect(demo).toHaveAttribute("required", "");
+  await expect(demo).toHaveAccessibleName("I understand this is a fictional demo and nothing will be sent.");
+  await expect(form.locator('label.check-line:has(input[name="demoOk"])')).toContainText("(required)");
   for (const name of ["packageId", "notes", "anxious", "window"]) {
     await expect(form.locator(`[name="${name}"][aria-required]`), name).toHaveCount(0);
+    await expect(form.locator(`[name="${name}"][required]`), name).toHaveCount(0);
   }
 });
 
