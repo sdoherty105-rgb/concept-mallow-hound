@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { cloneElement, isValidElement, useEffect, useId, useMemo, useRef, useState, type FormEvent, type ReactElement, type ReactNode } from "react";
 import { COATS, DEMO_SLOTS, PACKAGES, SIZES, SUBURBS, estimate, formatDuration, type CoatId, type SizeId } from "@/lib/data";
 import { EMPTY, ORDER, validate, type Errors, type Values } from "@/lib/booking";
 import { PREFILL_EVENT, useHydrated, type PrefillDetail } from "@/lib/hydrated";
@@ -209,7 +209,7 @@ export function BookingForm() {
       <fieldset className="fs">
         <legend>About you and your dog</legend>
         <div className="grid2">
-          <Field id={id("ownerName")} label="Your name" error={errors.ownerName}>
+          <Field id={id("ownerName")} label="Your name" error={errors.ownerName} required>
             <input
               id={id("ownerName")}
               name="ownerName"
@@ -221,7 +221,7 @@ export function BookingForm() {
               aria-describedby={errors.ownerName ? `${id("ownerName")}-err` : undefined}
             />
           </Field>
-          <Field id={id("mobile")} label="Mobile" error={errors.mobile}>
+          <Field id={id("mobile")} label="Mobile" error={errors.mobile} required>
             <input
               id={id("mobile")}
               name="mobile"
@@ -235,7 +235,7 @@ export function BookingForm() {
               aria-describedby={errors.mobile ? `${id("mobile")}-err` : undefined}
             />
           </Field>
-          <Field id={id("email")} label="Email" error={errors.email}>
+          <Field id={id("email")} label="Email" error={errors.email} required>
             <input
               id={id("email")}
               name="email"
@@ -248,7 +248,7 @@ export function BookingForm() {
               aria-describedby={errors.email ? `${id("email")}-err` : undefined}
             />
           </Field>
-          <Field id={id("suburb")} label="Suburb" error={errors.suburb}>
+          <Field id={id("suburb")} label="Suburb" error={errors.suburb} required>
             <select
               id={id("suburb")}
               name="suburb"
@@ -267,7 +267,7 @@ export function BookingForm() {
               <option value="Somewhere else (waitlist)">Somewhere else (waitlist)</option>
             </select>
           </Field>
-          <Field id={id("dogName")} label="Dog’s name" error={errors.dogName}>
+          <Field id={id("dogName")} label="Dog’s name" error={errors.dogName} required>
             <input
               id={id("dogName")}
               name="dogName"
@@ -288,7 +288,7 @@ export function BookingForm() {
               ))}
             </select>
           </Field>
-          <Field id={id("coat")} label="Coat type" error={errors.coat}>
+          <Field id={id("coat")} label="Coat type" error={errors.coat} required>
             <select
               id={id("coat")}
               name="coat"
@@ -306,7 +306,7 @@ export function BookingForm() {
               ))}
             </select>
           </Field>
-          <Field id={id("size")} label="Size" error={errors.size}>
+          <Field id={id("size")} label="Size" error={errors.size} required>
             <select
               id={id("size")}
               name="size"
@@ -398,19 +398,33 @@ function Field({
   id,
   label,
   error,
+  required = false,
   children,
 }: {
   id: string;
   label: string;
   error?: string;
+  /** Marks the label "(required)" and sets aria-required on the control. */
+  required?: boolean;
   children: ReactNode;
 }) {
+  const control =
+    required && isValidElement(children)
+      ? cloneElement(children as ReactElement<{ "aria-required"?: boolean }>, { "aria-required": true })
+      : children;
   return (
     <div className={`field${error ? " has-error" : ""}`}>
       <label className="field__label" htmlFor={id}>
         {label}
+        {required && (
+          // aria-required already tells assistive tech; this keeps the accessible name to the label.
+          <span className="field__req" aria-hidden="true">
+            {" "}
+            (required)
+          </span>
+        )}
       </label>
-      {children}
+      {control}
       {error && (
         <p className="field__error" id={`${id}-err`}>
           {error}

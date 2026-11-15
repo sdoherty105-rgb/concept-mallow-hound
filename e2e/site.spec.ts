@@ -150,7 +150,7 @@ test("a chosen package changes the estimate and Sundays cannot be booked", async
   await page.goto("/");
   await page.waitForLoadState("networkidle");
   await page.getByLabel("Coat type").selectOption("curly");
-  await page.getByLabel("Size", { exact: true }).selectOption("large");
+  await page.getByRole("combobox", { name: "Size", exact: true }).selectOption("large");
   await expect(page.locator(".booking__estimate")).toContainText("The Full Mallow (recommended), $164");
   await page.getByLabel("Package").selectOption("puppy-debut");
   await expect(page.locator(".booking__estimate")).toContainText("Puppy Debut, $59");
@@ -203,11 +203,11 @@ test.describe("demo booking form", () => {
 
     await page.getByLabel("Your name").fill("Sam Example");
     await page.getByRole("textbox", { name: "Mobile", exact: true }).fill("0400 000 000");
-    await page.getByLabel("Email", { exact: true }).fill("sam@example.com");
-    await page.getByLabel("Suburb", { exact: true }).selectOption("Pelican Hill");
+    await page.getByRole("textbox", { name: "Email", exact: true }).fill("sam@example.com");
+    await page.getByRole("combobox", { name: "Suburb", exact: true }).selectOption("Pelican Hill");
     await page.getByLabel("Dog’s name").fill("Biscuit");
     await page.getByLabel("Coat type").selectOption("curly");
-    await page.getByLabel("Size", { exact: true }).selectOption("small");
+    await page.getByRole("combobox", { name: "Size", exact: true }).selectOption("small");
     await expect(page.locator(".booking__estimate")).toContainText("$119 + $15 outer-zone travel = $134");
     await page.locator('input[name="date"]:not(:disabled)').first().check({ force: true });
     await page.getByLabel(/I understand this is a fictional demo/).check();
@@ -234,6 +234,32 @@ test.describe("demo booking form", () => {
       expect(f.method).toBeNull();
     }
   });
+});
+
+test("booking form marks exactly the required fields, visibly and with aria-required (M1)", async ({ page }) => {
+  await page.goto("/");
+  const form = page.locator("form.booking");
+  const required = [
+    ["Your name", "ownerName"],
+    ["Mobile", "mobile"],
+    ["Email", "email"],
+    ["Suburb", "suburb"],
+    ["Dog’s name", "dogName"],
+    ["Coat type", "coat"],
+    ["Size", "size"],
+  ];
+  for (const [label, name] of required) {
+    const control = form.locator(`[name="${name}"]`);
+    await expect(control, label).toHaveAttribute("aria-required", "true");
+    // The visible marker is on the control's own label; the accessible name stays the plain label.
+    const id = await control.getAttribute("id");
+    await expect(form.locator(`label[for="${id}"]`)).toHaveText(`${label} (required)`);
+    await expect(control).toHaveAccessibleName(label);
+  }
+  await expect(form.locator(".field__req")).toHaveCount(7);
+  for (const name of ["packageId", "notes", "anxious", "window"]) {
+    await expect(form.locator(`[name="${name}"][aria-required]`), name).toHaveCount(0);
+  }
 });
 
 test("no third-party requests are made on load", async ({ page }) => {
