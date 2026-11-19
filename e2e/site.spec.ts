@@ -3,10 +3,12 @@ import AxeBuilder from "@axe-core/playwright";
 
 const PAGES = [
   { path: "/", h1: /The groom\s*comes to you\./i },
-  { path: "/packages", h1: /What’s included, and what it costs/ },
+  { path: "/packages", h1: /The full menu/ },
 ];
-const LABEL = "An OFF/SHIFT concept — fictional demonstration";
+const DISCLOSURE = "Fictional business. A concept site by OFF/SHIFT Studio.";
+const LABEL = DISCLOSURE;
 const LABEL_URL = "https://offshiftstudio.com.au/concepts/mallow-hound";
+const CTA_URL = "https://offshiftstudio.com.au/?concept=mallow-hound#contact";
 
 for (const p of PAGES) {
   test.describe(`page ${p.path}`, () => {
@@ -20,11 +22,20 @@ for (const p of PAGES) {
       await expect(page.locator("body > footer")).toHaveCount(1);
     });
 
-    test("shows the concept label linking to OFF/SHIFT", async ({ page }) => {
+    test("discloses the fictional business and links back to OFF/SHIFT", async ({ page }) => {
       await page.goto(p.path);
-      const link = page.getByRole("link", { name: new RegExp(LABEL) }).first();
-      await expect(link).toBeVisible();
-      await expect(link).toHaveAttribute("href", LABEL_URL);
+      const strip = page.getByRole("complementary", { name: "About this concept site" });
+      await expect(strip).toContainText(DISCLOSURE);
+      const back = strip.getByRole("link", { name: "Back to the concept" });
+      await expect(back).toBeVisible();
+      await expect(back).toHaveAttribute("href", LABEL_URL);
+      const cta = strip.getByRole("link", { name: "Want a website like this?" });
+      await expect(cta).toBeVisible();
+      await expect(cta).toHaveAttribute("href", CTA_URL);
+      await expect(cta).not.toHaveAttribute("target", /.+/);
+      const footer = page.locator("body > footer");
+      await expect(footer.getByRole("link", { name: "Back to the concept" })).toHaveAttribute("href", LABEL_URL);
+      await expect(footer.getByRole("link", { name: "Want a website like this?" })).toHaveAttribute("href", CTA_URL);
     });
 
     test("is noindex by meta tag and by header", async ({ page }) => {
@@ -72,7 +83,7 @@ test("unknown routes show a friendly 404 that is also labelled and noindex", asy
 
 test("home has every requested section", async ({ page }) => {
   await page.goto("/");
-  for (const id of ["how", "packages", "coat", "area", "calm", "booking", "faq"]) {
+  for (const id of ["area", "how", "coat", "packages", "booking", "faq"]) {
     await expect(page.locator(`section#${id}`)).toHaveCount(1);
   }
   await expect(page.locator("footer")).toBeVisible();
@@ -83,13 +94,17 @@ test("coat selector updates package, time and price", async ({ page }) => {
   const result = page.locator(".result");
   await expect(result).toContainText("The Full Mallow");
   await expect(result).toContainText("$139");
-  await page.getByLabel(/Double & fluffy/).check({ force: true });
-  await page.getByLabel(/Giant/).check({ force: true });
+  await page.getByLabel(/Double & fluffy/).click({ force: true });
+  await expect(page.getByLabel(/Double & fluffy/)).toBeChecked();
+  await page.getByLabel(/Giant/).click({ force: true });
+  await expect(page.getByLabel(/^Giant/)).toBeChecked();
   await expect(result).toContainText("Shed Less");
   await expect(result).toContainText("$204");
   await expect(result).toContainText("3 hr 15 min");
-  await page.getByLabel(/Short & smooth/).check({ force: true });
-  await page.getByLabel(/^Small/).check({ force: true });
+  await page.getByLabel(/Short & smooth/).click({ force: true });
+  await expect(page.getByLabel(/Short & smooth/)).toBeChecked();
+  await page.getByLabel(/^Small/).click({ force: true });
+  await expect(page.getByLabel(/^Small/)).toBeChecked();
   await expect(result).toContainText("Fresh Start");
   await expect(result).toContainText("$79");
 });
@@ -111,6 +126,7 @@ test("service area check answers for covered, outer and unknown suburbs", async 
   const out = page.locator(".check__out");
   await input.fill("Mallow Bay");
   await expect(out).toContainText("Yes, we come to Mallow Bay");
+  await expect(page.locator(".van-panel")).toHaveText("Mallow Bay");
   await expect(out).toContainText("no travel fee");
   await input.fill("Pelican Hill");
   await expect(out).toContainText("$15 travel fee");
@@ -120,12 +136,43 @@ test("service area check answers for covered, outer and unknown suburbs", async 
 
 test("selector choices prefill the booking form", async ({ page }) => {
   await page.goto("/");
-  await page.getByLabel(/Long & silky/).check({ force: true });
-  await page.getByLabel(/^Large/).check({ force: true });
+  await page.getByLabel(/Long & silky/).click({ force: true });
+  await expect(page.getByLabel(/Long & silky/)).toBeChecked();
+  await page.getByLabel(/^Large/).click({ force: true });
+  await expect(page.getByLabel(/^Large/)).toBeChecked();
   await page.getByRole("link", { name: "Book this groom" }).click();
   await expect(page.locator('select[name="coat"]')).toHaveValue("long");
   await expect(page.locator('select[name="size"]')).toHaveValue("large");
   await expect(page.locator('select[name="packageId"]')).toHaveValue("full-mallow");
+});
+
+test("a chosen package changes the estimate and Sundays cannot be booked", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  await page.getByLabel("Coat type").selectOption("curly");
+  await page.getByRole("combobox", { name: "Size", exact: true }).selectOption("large");
+  await expect(page.locator(".booking__estimate")).toContainText("The Full Mallow (recommended), $164");
+  await page.getByLabel("Package").selectOption("puppy-debut");
+  await expect(page.locator(".booking__estimate")).toContainText("Puppy Debut, $59");
+  const days = page.locator('input[name="date"]');
+  await expect(days).toHaveCount(7);
+  await expect(page.locator(".day--rest input")).toBeDisabled();
+  await page.getByRole("button", { name: /Request a groom/ }).click();
+  await page.getByRole("button", { name: "Pick the day you’d like." }).click();
+  await expect(page.locator('input[name="date"]:not(:disabled)').first()).toBeFocused();
+});
+
+test("phones get a single-row stop bar that never covers the footer links", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "mobile only");
+  await page.goto("/");
+  const bar = page.getByRole("navigation", { name: "Quick stops" });
+  await expect(bar.getByRole("link")).toHaveText(["Suburb", "Price", "Menu", "Book"]);
+  const box = await bar.boundingBox();
+  expect(box!.height).toBeLessThan(72);
+  await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+  const cta = page.locator("body > footer").getByRole("link", { name: "Want a website like this?" });
+  const ctaBox = await cta.boundingBox();
+  expect(ctaBox!.y + ctaBox!.height).toBeLessThanOrEqual(box!.y);
 });
 
 test("FAQ items expand", async ({ page }) => {
@@ -156,12 +203,13 @@ test.describe("demo booking form", () => {
 
     await page.getByLabel("Your name").fill("Sam Example");
     await page.getByRole("textbox", { name: "Mobile", exact: true }).fill("0400 000 000");
-    await page.getByLabel("Email", { exact: true }).fill("sam@example.com");
-    await page.getByLabel("Suburb", { exact: true }).selectOption("Mallow Bay");
+    await page.getByRole("textbox", { name: "Email", exact: true }).fill("sam@example.com");
+    await page.getByRole("combobox", { name: "Suburb", exact: true }).selectOption("Pelican Hill");
     await page.getByLabel("Dog’s name").fill("Biscuit");
     await page.getByLabel("Coat type").selectOption("curly");
-    await page.getByLabel("Size", { exact: true }).selectOption("small");
-    await page.getByLabel("Preferred day").fill("2099-01-15");
+    await page.getByRole("combobox", { name: "Size", exact: true }).selectOption("small");
+    await expect(page.locator(".booking__estimate")).toContainText("$119 + $15 outer-zone travel = $134");
+    await page.locator('input[name="date"]:not(:disabled)').first().check({ force: true });
     await page.getByLabel(/I understand this is a fictional demo/).check();
     await page.getByRole("button", { name: /Request a groom/ }).click();
 
@@ -170,6 +218,8 @@ test.describe("demo booking form", () => {
     await expect(success).toContainText("Demo only");
     await expect(success).toContainText("Nothing was sent, saved or stored");
     await expect(success).toContainText("Biscuit");
+    await expect(success).toContainText("$134 incl. $15 travel");
+    await expect(success).not.toContainText(/\d{4}-\d{2}-\d{2}/);
     await page.waitForTimeout(500);
     expect(requests).toEqual([]);
     expect(navigations).toBe(0);
@@ -186,6 +236,44 @@ test.describe("demo booking form", () => {
   });
 });
 
+test("booking form marks exactly the required fields, visibly and with required semantics (M1)", async ({ page }) => {
+  await page.goto("/");
+  const form = page.locator("form.booking");
+  const required = [
+    ["Your name", "ownerName"],
+    ["Mobile", "mobile"],
+    ["Email", "email"],
+    ["Suburb", "suburb"],
+    ["Dog’s name", "dogName"],
+    ["Coat type", "coat"],
+    ["Size", "size"],
+  ];
+  for (const [label, name] of required) {
+    const control = form.locator(`[name="${name}"]`);
+    await expect(control, label).toHaveAttribute("aria-required", "true");
+    // The visible marker is on the control's own label; the accessible name stays the plain label.
+    const id = await control.getAttribute("id");
+    await expect(form.locator(`label[for="${id}"]`)).toHaveText(`${label} (required)`);
+    await expect(control).toHaveAccessibleName(label);
+  }
+  await expect(form.locator(".field__req")).toHaveCount(9);
+  // The day picker and the demo tick are required by validation too: native `required`
+  // (the form is noValidate, so the browser adds no popups) plus the same visible marker.
+  const days = form.locator('input[name="date"]');
+  expect(await days.count()).toBeGreaterThan(0);
+  for (const day of await days.all()) await expect(day).toHaveAttribute("required", "");
+  await expect(form.locator("fieldset.days-set legend")).toHaveText("Pick a day (required)");
+  await expect(form.getByRole("group", { name: "Pick a day", exact: true })).toBeVisible();
+  const demo = form.locator('input[name="demoOk"]');
+  await expect(demo).toHaveAttribute("required", "");
+  await expect(demo).toHaveAccessibleName("I understand this is a fictional demo and nothing will be sent.");
+  await expect(form.locator('label.check-line:has(input[name="demoOk"])')).toContainText("(required)");
+  for (const name of ["packageId", "notes", "anxious", "window"]) {
+    await expect(form.locator(`[name="${name}"][aria-required]`), name).toHaveCount(0);
+    await expect(form.locator(`[name="${name}"][required]`), name).toHaveCount(0);
+  }
+});
+
 test("no third-party requests are made on load", async ({ page }) => {
   const external: string[] = [];
   page.on("request", (r) => {
@@ -198,12 +286,15 @@ test("no third-party requests are made on load", async ({ page }) => {
   expect(external).toEqual([]);
 });
 
-test("reduced motion disables animations", async ({ browser }) => {
+test("reduced motion parks a static van instead of travelling", async ({ browser }) => {
   const ctx = await browser.newContext({ reducedMotion: "reduce" });
   const page = await ctx.newPage();
   await page.goto("/");
-  const name = await page.locator(".bubble").first().evaluate((el) => getComputedStyle(el).animationName);
+  const name = await page.locator(".route-van").evaluate((el) => getComputedStyle(el).animationName);
   expect(name).toBe("none");
+  await expect(page.locator(".stop-van").first()).toBeVisible();
+  const hero = await page.locator(".hero-van").evaluate((el) => getComputedStyle(el).animationName);
+  expect(hero).toBe("none");
   await ctx.close();
 });
 

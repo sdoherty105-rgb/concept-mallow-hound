@@ -97,3 +97,24 @@ describe("booking form validation", () => {
     expect(validate({ ...good, date: "2029-12-31" }, "2030-01-01").date).toBeTruthy();
   });
 });
+
+describe("booking estimate", () => {
+  it("uses the recommendation when no package is chosen", async () => {
+    const { estimate } = await import("@/lib/data");
+    const e = estimate("double", "giant");
+    expect(e.package.name).toBe("Shed Less");
+    expect(e.recommended).toBe(true);
+    expect(e.total).toBe(204);
+  });
+  it("honours a chosen package and keeps Puppy Debut flat", async () => {
+    const { estimate } = await import("@/lib/data");
+    expect(estimate("curly", "giant", "puppy-debut").total).toBe(59);
+    expect(estimate("curly", "small", "fresh-start").groom).toBe(79);
+  });
+  it("adds the outer-zone travel fee only for outer suburbs", async () => {
+    const { estimate } = await import("@/lib/data");
+    expect(estimate("curly", "small", "", "Pelican Hill")).toMatchObject({ groom: 119, travel: 15, total: 134 });
+    expect(estimate("curly", "small", "", "Mallow Bay")).toMatchObject({ travel: 0, total: 119 });
+    expect(estimate("curly", "small", "", "Somewhere else (waitlist)").travel).toBe(0);
+  });
+});
