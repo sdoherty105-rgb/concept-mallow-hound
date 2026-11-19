@@ -13,7 +13,8 @@
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "cf:build": "opennextjs-cloudflare build",
     "cf:smoke": "npm run cf:build && node scripts/cf-smoke.mjs",
-    "screens": "node scripts/screenshots.mjs"
+    "screens": "node scripts/screenshots.mjs",
+    "qa": "npm run typecheck && npm run build && npm test && npm run test:e2e"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.20.13",
