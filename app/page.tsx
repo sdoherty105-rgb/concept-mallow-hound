@@ -51,7 +51,7 @@ export default function HomePage() {
               <ol className="feature-list">
                 {FEATURES.map((feature, index) => (
                   <li key={feature.t}>
-                    <span className="feature-list__n">{index + 1}</span>
+                    <span className="feature-list__n" data-numeric>{index + 1}</span>
                     <div>
                       <h3>{feature.t}</h3>
                       <p>{feature.d}</p>

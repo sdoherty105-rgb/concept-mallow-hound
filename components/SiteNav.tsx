@@ -61,7 +61,7 @@ export function SiteNav() {
         return (
           <li key={stop.id}>
             <a className={`pill${on ? " is-on" : ""}`} href={hrefFor(stop.id)} aria-current={on ? (page ? "page" : "location") : undefined}>
-              <span className="pill__n">{stop.n}</span>
+              <span className="pill__n" data-numeric>{stop.n}</span>
               <span className="pill__l">{stop.label}</span>
             </a>
           </li>
