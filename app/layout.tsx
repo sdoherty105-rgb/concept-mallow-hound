@@ -7,12 +7,12 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 const display = localFont({
-  src: "./fonts/BricolageGrotesque-latin.woff2",
-  weight: "200 800",
+  src: "./fonts/Fredoka-latin.woff2",
+  weight: "300 700",
   variable: "--font-display",
   display: "swap",
   adjustFontFallback: "Arial",
-  declarations: [{ prop: "font-stretch", value: "75% 100%" }],
+  declarations: [{ prop: "font-stretch", value: "75% 125%" }],
 });
 
 const body = localFont({

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BACK_LABEL, CONCEPT_URL, CTA_LABEL, DISCLOSURE, HOURS, STUDIO_CONTACT_URL } from "@/lib/data";
+import { BACK_LABEL, CONCEPT_URL, CTA_LABEL, DISCLOSURE, HOURS, STUDIO_CONTACT_URL, STUDIO_HOME_URL, STUDIO_WORDMARK } from "@/lib/data";
 
 export function SiteFooter() {
   return (
@@ -63,6 +63,13 @@ export function SiteFooter() {
           <a href={CONCEPT_URL}>{BACK_LABEL}</a>
           <a className="depot__cta" href={STUDIO_CONTACT_URL}>
             {CTA_LABEL}
+          </a>
+        </p>
+        <p className="depot__credit" data-footer-credit>
+          <span>Designed by</span>
+          <a href={STUDIO_HOME_URL} rel="noopener">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={STUDIO_WORDMARK} alt="OFF/SHIFT Studio" width={88} height={24} />
           </a>
         </p>
       </div>

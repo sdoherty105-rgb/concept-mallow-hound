@@ -29,7 +29,7 @@ export default function HomePage() {
                 <span>comes to </span>
                 <span>you.</span>
               </h1>
-              <p className="hero-lead">One dog in the van. No waiting room, no car ride, no cage dryer. Parked at your curb.</p>
+              <p className="hero-lead">Your dog gets the whole van to themselves, parked at your curb, with no waiting room and no car ride.</p>
             </div>
             <ServiceCheck />
           </div>
@@ -42,12 +42,11 @@ export default function HomePage() {
               <VanCutaway />
             </div>
             <div className="how-copy">
-              <p className="kicker">Stop 1</p>
               <h2 id="how-title" className="h-step">
                 <span>Inside </span>
                 <span>the van.</span>
               </h2>
-              <p>Four things, and then the dog. The numbers sit on the drawing.</p>
+              <p>The van carries four things for the dog, and the numbers sit on the drawing.</p>
               <ol className="feature-list">
                 {FEATURES.map((feature, index) => (
                   <li key={feature.t}>
@@ -77,7 +76,6 @@ export default function HomePage() {
         <section id="coat" className="stop stop--grape" data-layout="stop-coats" aria-labelledby="coat-title">
           <StopMark n="2" />
           <div className="stop__inner">
-            <p className="kicker">Stop 2</p>
             <h2 id="coat-title" className="h-step">
               <span>Your dog, </span>
               <span>priced honestly.</span>
@@ -90,7 +88,6 @@ export default function HomePage() {
         <section id="packages" className="stop stop--paper" data-layout="stop-tickets" aria-labelledby="menu-title">
           <StopMark n="3" />
           <div className="stop__inner">
-            <p className="kicker">Stop 3</p>
             <h2 id="menu-title" className="h-step">
               <span>Four tickets, </span>
               <span>none the same size.</span>
@@ -104,7 +101,6 @@ export default function HomePage() {
           <StopMark n="4" />
           <div className="stop__inner book-split">
             <div>
-              <p className="kicker">Stop 4</p>
               <h2 id="book-title" className="h-step">
                 <span>Pick a day. </span>
                 <span>Then the short form.</span>
@@ -118,7 +114,6 @@ export default function HomePage() {
         <section id="faq" className="stop stop--paper stop--faq" data-layout="stop-strips" aria-labelledby="faq-title">
           <StopMark n="5" />
           <div className="stop__inner">
-            <p className="kicker">Stop 5</p>
             <h2 id="faq-title" className="h-step">
               <span>Questions, </span>
               <span>in strips.</span>
