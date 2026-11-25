@@ -1,6 +1,6 @@
 export const CONCEPT_SLUG = "mallow-hound";
 export const CONCEPT_URL = `https://offshiftstudio.com.au/concepts/${CONCEPT_SLUG}`;
-export const CONCEPT_LABEL = "An OFF/SHIFT concept — fictional demonstration";
+export const CONCEPT_LABEL = "An OFF/SHIFT concept, fictional demonstration";
 export const STUDIO_CONTACT_URL = `https://offshiftstudio.com.au/?concept=${CONCEPT_SLUG}#contact`;
 export const DISCLOSURE = "Fictional business. A concept site by OFF/SHIFT Studio.";
 export const BACK_LABEL = "Back to the concept";
@@ -316,7 +316,7 @@ export function checkSuburb(query: string): SuburbCheck {
 export const PROMISES = [
   {
     title: "One dog at a time",
-    body: "No kennels, no cage dryers, no waiting room full of barking. Your dog has the van to themselves.",
+    body: "Your dog has the van to themselves, so there are no kennels or cage dryers and nobody barking in a waiting room.",
   },
   {
     title: "A proper hello first",
@@ -380,3 +380,6 @@ export const HOURS = [
   { day: "Saturday", time: "8:00 am – 1:00 pm" },
   { day: "Sunday", time: "Resting (the van gets a wash too)" },
 ];
+
+export const STUDIO_HOME_URL = "https://offshiftstudio.com.au";
+export const STUDIO_WORDMARK = "/brand/offshift-wordmark-light.svg";

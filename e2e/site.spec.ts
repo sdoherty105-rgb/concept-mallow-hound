@@ -298,3 +298,16 @@ test("reduced motion parks a static van instead of travelling", async ({ browser
   await ctx.close();
 });
 
+test("footer credits OFF/SHIFT Studio with the canonical wordmark", async ({ page }) => {
+  await page.goto("/");
+  const credit = page.locator("body > footer [data-footer-credit]");
+  await expect(credit).toContainText("Designed by");
+  const link = credit.getByRole("link", { name: "OFF/SHIFT Studio" });
+  await expect(link).toHaveAttribute("href", "https://offshiftstudio.com.au");
+  await expect(link).toHaveAttribute("rel", /noopener/);
+  const img = link.locator("img");
+  await expect(img).toHaveAttribute("src", "/brand/offshift-wordmark-light.svg");
+  const box = await img.boundingBox();
+  expect(box?.width ?? 0).toBeGreaterThanOrEqual(72);
+  expect(box?.width ?? 999).toBeLessThanOrEqual(96);
+});

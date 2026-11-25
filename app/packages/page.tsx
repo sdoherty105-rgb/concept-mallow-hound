@@ -20,7 +20,7 @@ export default function PackagesPage() {
     <>
       <section className="menu-mast" data-layout="menu-mast">
         <div className="stop__inner">
-          <p className="kicker kicker--light">The menu, not the route</p>
+          <p className="kicker kicker--light">Every package, one page</p>
           <h1 className="stepped stepped--light">
             <span>The full </span>
             <span>menu.</span>
