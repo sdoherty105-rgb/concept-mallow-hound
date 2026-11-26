@@ -1,4 +1,4 @@
-import { BACK_LABEL, CONCEPT_URL, CTA_LABEL, DISCLOSURE, STUDIO_CONTACT_URL } from "@/lib/data";
+import { BACK_LABEL, BANNER_CTA_LABEL, CONCEPT_URL, CTA_LABEL, DISCLOSURE, STUDIO_CONTACT_URL } from "@/lib/data";
 
 /** The road-sign strip: who made this, that it is fictional, and the two ways back to OFF/SHIFT. */
 export function ConceptBanner() {
@@ -14,7 +14,7 @@ export function ConceptBanner() {
             ·{" "}
           </span>
           <a className="road-sign__cta" href={STUDIO_CONTACT_URL}>
-            {CTA_LABEL}
+            {BANNER_CTA_LABEL}
           </a>
         </span>
       </p>

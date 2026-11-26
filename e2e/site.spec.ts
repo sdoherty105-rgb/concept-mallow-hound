@@ -9,6 +9,7 @@ const DISCLOSURE = "Fictional business. A concept site by OFF/SHIFT Studio.";
 const LABEL = DISCLOSURE;
 const LABEL_URL = "https://offshiftstudio.com.au/concepts/mallow-hound";
 const CTA_URL = "https://offshiftstudio.com.au/?concept=mallow-hound#contact";
+const BANNER_CTA = "Want a site like this?";
 
 for (const p of PAGES) {
   test.describe(`page ${p.path}`, () => {
@@ -29,10 +30,12 @@ for (const p of PAGES) {
       const footer = page.locator("body > footer");
       if (isMobile) {
         const box = await strip.boundingBox();
-        expect(box?.height ?? 999).toBeLessThanOrEqual(52);
+        expect(box?.height ?? 999).toBeLessThanOrEqual(76);
         await expect(strip.getByRole("link", { name: "OFF/SHIFT Studio" })).toHaveAttribute("href", LABEL_URL);
-        await expect(strip.getByRole("link", { name: "Want a website like this?" })).toBeVisible();
-        await expect(strip.getByRole("link", { name: "Want a website like this?" })).toHaveAttribute("href", CTA_URL);
+        const bannerCta = strip.getByRole("link", { name: BANNER_CTA });
+        await expect(bannerCta).toBeVisible();
+        await expect(bannerCta).toHaveAttribute("href", CTA_URL);
+        await expect(strip).not.toContainText("…");
         await expect(footer.getByRole("link", { name: "Back to the concept" })).toBeVisible();
       } else {
         await expect(strip.locator(".road-sign__disclosure--wide")).toContainText(DISCLOSURE);
@@ -147,6 +150,21 @@ test("coat selector radios are keyboard focusable", async ({ page, isMobile }) =
   await page.keyboard.press("Space");
   await expect(short).toBeChecked();
   await expect(page.locator(".result")).toContainText("Fresh Start");
+});
+
+test("mobile banner shows full studio CTA without ellipsis from 360 to 430 wide", async ({ browser, isMobile }) => {
+  test.skip(!isMobile, "phone widths only");
+  for (const width of [360, 390, 430]) {
+    const ctx = await browser.newContext({ viewport: { width, height: 844 } });
+    const page = await ctx.newPage();
+    await page.goto("/");
+    const strip = page.getByRole("complementary", { name: "About this concept site" });
+    const cta = strip.getByRole("link", { name: BANNER_CTA });
+    await expect(cta).toBeVisible();
+    await expect(strip).not.toContainText("…");
+    await expect(cta).toHaveText(BANNER_CTA);
+    await ctx.close();
+  }
 });
 
 test("hero suburb field has a visible check control", async ({ page }) => {

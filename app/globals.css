@@ -873,18 +873,24 @@ th span, td span { display: block; font-weight: 500; font-size: 0.95rem; }
     white-space: nowrap;
   }
   .road-sign {
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
     min-height: 44px;
-    max-height: 48px;
-    overflow: hidden;
-    padding: 0.3rem 0.75rem;
+    padding: 0.35rem 0.75rem;
     font-size: 0.82rem;
-    gap: 0.35rem;
+    gap: 0.25rem;
   }
   .road-sign__disclosure--wide,
   .road-sign__links--wide { display: none; }
-  .road-sign__disclosure--narrow { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .road-sign__disclosure--narrow { display: block; white-space: normal; overflow: visible; }
+  .road-sign__compact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.1rem 0.3rem;
+    line-height: 1.3;
+  }
+  .road-sign__disclosure--narrow a { white-space: normal; }
   .road-sign__disclosure--narrow .road-sign__cta {
     display: inline;
     padding: 0;
@@ -895,9 +901,8 @@ th span, td span { display: block; font-weight: 500; font-size: 0.95rem; }
     text-decoration: underline;
     text-underline-offset: 0.14em;
     min-height: 44px;
-    line-height: 44px;
+    line-height: 1.3;
   }
-  .road-sign a { white-space: nowrap; }
   .mobile-stops .pill--go:not(.is-on) { background: var(--cobalt); border-color: var(--cobalt); color: var(--white); }
   .road::before { border-left-width: 6px; left: calc(50% - 3px); }
   .route-van { left: 0.2rem; width: calc(var(--path) - 0.4rem); }
