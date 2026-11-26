@@ -87,20 +87,25 @@ export function ServiceCheck() {
         <label htmlFor={inputId} className="suburb-label">
           Your suburb
         </label>
-        <input
-          id={inputId}
-          className="suburb-input"
-          type="text"
-          list={listId}
-          value={value}
-          onChange={(event) => {
-            setValue(event.target.value);
-            setSubmitted(event.target.value);
-          }}
-          placeholder="Type your suburb"
-          autoComplete="off"
-          disabled={!hydrated}
-        />
+        <div className="suburb-input-row">
+          <input
+            id={inputId}
+            className="suburb-input"
+            type="text"
+            list={listId}
+            value={value}
+            onChange={(event) => {
+              setValue(event.target.value);
+              setSubmitted(event.target.value);
+            }}
+            placeholder="Type your suburb"
+            autoComplete="off"
+            disabled={!hydrated}
+          />
+          <button type="submit" className="suburb-submit btn" disabled={!hydrated}>
+            Check
+          </button>
+        </div>
         <datalist id={listId}>
           {SUBURBS.map((suburb) => (
             <option key={suburb.name} value={suburb.name} />
