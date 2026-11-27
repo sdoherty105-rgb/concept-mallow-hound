@@ -5,9 +5,12 @@ export function VanArt() {
     <svg className="hero-van__svg" viewBox="0 0 760 250" role="img" aria-label="Geometric grooming van">
       <rect x="24" y="62" width="470" height="128" rx="16" fill="#2A3DF0" />
       <rect x="470" y="92" width="230" height="98" rx="14" fill="#2A3DF0" />
-      <rect x="520" y="108" width="132" height="48" fill="#FFF9EE" />
+      <rect x="520" y="108" width="132" height="48" rx="6" fill="#1E2CC4" />
       <rect className="van-stripe" x="24" y="132" width="446" height="24" fill="var(--accent)" />
       <rect x="40" y="74" width="410" height="50" rx="6" fill="#FFF9EE" />
+      <text x="245" y="108" textAnchor="middle" fill="#3B1C6B" fontSize="22" fontFamily="inherit" fontWeight="800">
+        Mallow Hound
+      </text>
       <circle cx="170" cy="198" r="34" fill="#3B1C6B" />
       <circle cx="575" cy="198" r="34" fill="#3B1C6B" />
       <rect x="668" y="150" width="28" height="16" rx="3" fill="#FF6A2B" />

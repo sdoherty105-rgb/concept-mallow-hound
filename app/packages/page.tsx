@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Dog, PuppyMark } from "@/components/Dogs";
-import { ADD_ONS, COATS, DEMO_PRICE, PACKAGES, SIZES, ZONE_FEES, formatDuration, recommend, type CoatId } from "@/lib/data";
+import { PriceLedger } from "@/components/PriceLedger";
+import { ADD_ONS, DEMO_PRICE, PACKAGES, ZONE_FEES, formatDuration, type CoatId } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "The full menu",
@@ -34,42 +35,8 @@ export default function PackagesPage() {
           <h2 id="ledger-title" className="h-step">
             <span>Price ledger</span>
           </h2>
-          <p className="demo-flag">{DEMO_PRICE}</p>
-          <div className="table-wrap" tabIndex={0} role="region" aria-label="Demonstration price ledger, scrollable">
-            <table>
-              <caption>Recommended package, time and demonstration price for every coat and size. Puppy Debut is a flat $59.</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Coat</th>
-                  {SIZES.map((size) => (
-                    <th scope="col" key={size.id}>
-                      {size.name}
-                      <span>{size.range}</span>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {COATS.map((coat) => (
-                  <tr key={coat.id}>
-                    <th scope="row">
-                      {coat.name}
-                      <span>{PACKAGES.find((pack) => pack.id === coat.packageId)?.name}</span>
-                    </th>
-                    {SIZES.map((size) => {
-                      const rec = recommend(coat.id, size.id);
-                      return (
-                        <td key={size.id}>
-                          <strong>${rec.price}</strong>
-                          <span>{formatDuration(rec.minutes)}</span>
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <p className="demo-flag ledger-table__note">{DEMO_PRICE}</p>
+          <PriceLedger />
           <p className="fine">Outer-zone suburbs add a flat ${ZONE_FEES[2]} demonstration travel fee. Matted coats are discussed before a clipper comes out.</p>
         </div>
       </section>

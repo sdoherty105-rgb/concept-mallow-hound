@@ -5,6 +5,8 @@ export const STUDIO_CONTACT_URL = `https://offshiftstudio.com.au/?concept=${CONC
 export const DISCLOSURE = "Fictional business. A concept site by OFF/SHIFT Studio.";
 export const BACK_LABEL = "Back to the concept";
 export const CTA_LABEL = "Want a website like this?";
+/** Shorter studio link for the single-row phone banner (no truncation). */
+export const BANNER_CTA_LABEL = "Want a site like this?";
 
 export const DEMO_PRICE = "Demonstration price. Invented for this concept, not a quote.";
 export const DEMO_SCHEDULE = "Demonstration schedule. Not a live timetable.";

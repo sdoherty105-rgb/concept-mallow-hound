@@ -103,6 +103,14 @@ button, input, select, textarea { font: inherit; color: var(--grape); color-sche
   line-height: 1.3;
 }
 .road-sign p { margin: 0; }
+.road-sign__disclosure--narrow { display: none; }
+.road-sign__links--wide { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 1rem; }
+.road-sign__disclosure--narrow a:not(.road-sign__cta) {
+  color: var(--butter);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
 .road-sign__links { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 1rem; }
 .road-sign a {
   display: inline-flex;
@@ -316,10 +324,32 @@ button, input, select, textarea { font: inherit; color: var(--grape); color-sche
   padding-bottom: 1.25rem;
 }
 .hero-copy { grid-area: title; align-self: start; }
-.hero-lead { max-width: 28rem; font-size: 1.15rem; }
+.hero-copy .stepped {
+  line-height: 0.92;
+  margin-bottom: 1.15rem;
+}
+.hero-copy .stepped span { padding-left: 0; }
+.hero-lead { max-width: 28rem; font-size: 1.15rem; margin-top: 0.15rem; }
 .suburb-form { grid-area: input; align-self: center; container-type: inline-size; }
 .suburb-label { display: block; font-weight: 800; margin-bottom: 0.35rem; }
+.suburb-input-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+.suburb-submit {
+  flex: none;
+  min-width: 5.25rem;
+  min-height: 48px;
+  padding: 0.45rem 1rem;
+  font-size: 1.05rem;
+  background: var(--grape);
+  border-color: var(--grape);
+  color: var(--butter);
+}
 .suburb-input {
+  flex: 1;
+  min-width: 0;
   width: 100%;
   font-family: var(--font-d);
   font-weight: 800;
@@ -689,6 +719,49 @@ button, input, select, textarea { font: inherit; color: var(--grape); color-sche
 .menu-mast { background: var(--cobalt); color: var(--white); }
 .menu-mast__lead { max-width: 36rem; font-size: 1.15rem; }
 .table-wrap { overflow-x: auto; border: 3px solid var(--grape); border-radius: 16px; }
+.ledger-cards { display: none; }
+.ledger-cards__list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
+.ledger-card {
+  border: 3px solid var(--grape);
+  border-radius: 16px;
+  padding: 0.85rem 0.9rem;
+  background: var(--paper);
+}
+.ledger-card__coat {
+  font-family: var(--font-d);
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1.05;
+  margin: 0 0 0.55rem;
+}
+.ledger-card__coat span {
+  display: block;
+  font-family: var(--font-b);
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-top: 0.15rem;
+}
+.ledger-card__sizes { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+.ledger-card__size {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding-top: 0.45rem;
+  border-top: 2px solid var(--grape);
+}
+.ledger-card__size:first-child { border-top: 0; padding-top: 0; }
+.ledger-card__label { font-weight: 800; }
+.ledger-card__label small { display: block; font-weight: 600; font-size: 0.9rem; }
+.ledger-card__price { text-align: right; }
+.ledger-card__price strong {
+  display: block;
+  font-family: var(--font-d);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.ledger-card__price small { display: block; font-size: 0.9rem; margin-top: 0.1rem; }
+.ledger-cards__note { margin-bottom: 0.65rem; }
 table { width: 100%; border-collapse: collapse; min-width: 40rem; }
 caption { caption-side: top; text-align: left; font-weight: 700; padding: 0.8rem 0.8rem 0.4rem; }
 th, td { text-align: left; padding: 0.7rem 0.8rem; border-bottom: 2px solid var(--grape); vertical-align: top; }
@@ -799,16 +872,49 @@ th span, td span { display: block; font-weight: 500; font-size: 0.95rem; }
     font-size: 0.95rem;
     white-space: nowrap;
   }
-  .road-sign { padding: 0.35rem 0.75rem; font-size: 0.85rem; gap: 0.2rem 1rem; }
-  .road-sign__links { flex-wrap: nowrap; gap: 0.9rem; }
-  .road-sign a { white-space: nowrap; }
-  .road-sign .road-sign__cta { padding: 0.1rem 0.65rem; }
+  .road-sign {
+    flex-wrap: wrap;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.82rem;
+    gap: 0.25rem;
+  }
+  .road-sign__disclosure--wide,
+  .road-sign__links--wide { display: none; }
+  .road-sign__disclosure--narrow { display: block; white-space: normal; overflow: visible; }
+  .road-sign__compact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.1rem 0.3rem;
+    line-height: 1.3;
+  }
+  .road-sign__disclosure--narrow a { white-space: normal; }
+  .road-sign__disclosure--narrow .road-sign__cta {
+    display: inline;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--butter);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.14em;
+    min-height: 44px;
+    line-height: 1.3;
+  }
   .mobile-stops .pill--go:not(.is-on) { background: var(--cobalt); border-color: var(--cobalt); color: var(--white); }
   .road::before { border-left-width: 6px; left: calc(50% - 3px); }
   .route-van { left: 0.2rem; width: calc(var(--path) - 0.4rem); }
   .stop-mark__n { width: 1.7rem; height: 1.7rem; font-size: 0.85rem; }
   .stepped { --stair: 0.55em; }
   .stepped span:nth-child(3) { padding-left: var(--stair); }
+  .hero-copy .stepped span { padding-left: 0; }
+  .ledger-table,
+  .ledger-table__note { display: none; }
+  .ledger-cards { display: block; }
+  .suburb-input-row { flex-wrap: wrap; }
+  .suburb-submit { min-height: 44px; }
   .hero-screen {
     grid-template-columns: 1fr;
     grid-template-areas: "title" "input" "van";

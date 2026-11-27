@@ -9,6 +9,7 @@ const DISCLOSURE = "Fictional business. A concept site by OFF/SHIFT Studio.";
 const LABEL = DISCLOSURE;
 const LABEL_URL = "https://offshiftstudio.com.au/concepts/mallow-hound";
 const CTA_URL = "https://offshiftstudio.com.au/?concept=mallow-hound#contact";
+const BANNER_CTA = "Want a site like this?";
 
 for (const p of PAGES) {
   test.describe(`page ${p.path}`, () => {
@@ -22,18 +23,30 @@ for (const p of PAGES) {
       await expect(page.locator("body > footer")).toHaveCount(1);
     });
 
-    test("discloses the fictional business and links back to OFF/SHIFT", async ({ page }) => {
+    test("discloses the fictional business and links back to OFF/SHIFT", async ({ page, isMobile }) => {
       await page.goto(p.path);
       const strip = page.getByRole("complementary", { name: "About this concept site" });
       await expect(strip).toContainText(DISCLOSURE);
-      const back = strip.getByRole("link", { name: "Back to the concept" });
-      await expect(back).toBeVisible();
-      await expect(back).toHaveAttribute("href", LABEL_URL);
-      const cta = strip.getByRole("link", { name: "Want a website like this?" });
-      await expect(cta).toBeVisible();
-      await expect(cta).toHaveAttribute("href", CTA_URL);
-      await expect(cta).not.toHaveAttribute("target", /.+/);
       const footer = page.locator("body > footer");
+      if (isMobile) {
+        const box = await strip.boundingBox();
+        expect(box?.height ?? 999).toBeLessThanOrEqual(76);
+        await expect(strip.getByRole("link", { name: "OFF/SHIFT Studio" })).toHaveAttribute("href", LABEL_URL);
+        const bannerCta = strip.getByRole("link", { name: BANNER_CTA });
+        await expect(bannerCta).toBeVisible();
+        await expect(bannerCta).toHaveAttribute("href", CTA_URL);
+        await expect(strip).not.toContainText("…");
+        await expect(footer.getByRole("link", { name: "Back to the concept" })).toBeVisible();
+      } else {
+        await expect(strip.locator(".road-sign__disclosure--wide")).toContainText(DISCLOSURE);
+        const back = strip.getByRole("link", { name: "Back to the concept" });
+        await expect(back).toBeVisible();
+        await expect(back).toHaveAttribute("href", LABEL_URL);
+        const cta = strip.getByRole("link", { name: "Want a website like this?" });
+        await expect(cta).toBeVisible();
+        await expect(cta).toHaveAttribute("href", CTA_URL);
+        await expect(cta).not.toHaveAttribute("target", /.+/);
+      }
       await expect(footer.getByRole("link", { name: "Back to the concept" })).toHaveAttribute("href", LABEL_URL);
       await expect(footer.getByRole("link", { name: "Want a website like this?" })).toHaveAttribute("href", CTA_URL);
     });
@@ -54,12 +67,23 @@ for (const p of PAGES) {
       expect(bad.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(" | ")}`)).toEqual([]);
     });
 
-    test("works without JavaScript", async ({ browser }) => {
-      const ctx = await browser.newContext({ javaScriptEnabled: false });
+    test("works without JavaScript", async ({ browser, isMobile }) => {
+      const ctx = await browser.newContext({
+        javaScriptEnabled: false,
+        viewport: isMobile ? { width: 390, height: 844 } : { width: 1440, height: 900 },
+      });
       const page = await ctx.newPage();
       await page.goto(p.path);
       await expect(page.locator("h1")).toContainText(p.h1);
-      await expect(page.getByText(LABEL).first()).toBeVisible();
+      const strip = page.getByRole("complementary", { name: "About this concept site" });
+      await expect(strip).toContainText(DISCLOSURE);
+      if (isMobile) {
+        await expect(strip.locator(".road-sign__disclosure--narrow")).toBeVisible();
+        await expect(strip.getByText(/Fictional concept by OFF\/SHIFT Studio/)).toBeVisible();
+      } else {
+        await expect(strip.locator(".road-sign__disclosure--wide")).toBeVisible();
+        await expect(strip.locator(".road-sign__disclosure--wide")).toContainText(LABEL);
+      }
       await ctx.close();
     });
   });
@@ -74,10 +98,18 @@ test("robots.txt disallows everything", async ({ request }) => {
   expect(res.headers()["x-robots-tag"]).toMatch(/noindex/);
 });
 
-test("unknown routes show a friendly 404 that is also labelled and noindex", async ({ page }) => {
+test("unknown routes show a friendly 404 that is also labelled and noindex", async ({ page, isMobile }) => {
   const res = await page.goto("/definitely-not-here");
   expect(res?.status()).toBe(404);
-  await expect(page.getByText(LABEL).first()).toBeVisible();
+  const strip = page.getByRole("complementary", { name: "About this concept site" });
+  await expect(strip).toContainText(DISCLOSURE);
+  if (isMobile) {
+    await expect(strip.locator(".road-sign__disclosure--narrow")).toBeVisible();
+    await expect(strip.getByText(/Fictional concept by OFF\/SHIFT Studio/)).toBeVisible();
+  } else {
+    await expect(strip.locator(".road-sign__disclosure--wide")).toBeVisible();
+    await expect(strip.locator(".road-sign__disclosure--wide")).toContainText(LABEL);
+  }
   expect(res?.headers()["x-robots-tag"]).toMatch(/noindex/);
 });
 
@@ -118,6 +150,30 @@ test("coat selector radios are keyboard focusable", async ({ page, isMobile }) =
   await page.keyboard.press("Space");
   await expect(short).toBeChecked();
   await expect(page.locator(".result")).toContainText("Fresh Start");
+});
+
+test("mobile banner shows full studio CTA without ellipsis from 360 to 430 wide", async ({ browser, isMobile }) => {
+  test.skip(!isMobile, "phone widths only");
+  for (const width of [360, 390, 430]) {
+    const ctx = await browser.newContext({ viewport: { width, height: 844 } });
+    const page = await ctx.newPage();
+    await page.goto("/");
+    const strip = page.getByRole("complementary", { name: "About this concept site" });
+    const cta = strip.getByRole("link", { name: BANNER_CTA });
+    await expect(cta).toBeVisible();
+    await expect(strip).not.toContainText("…");
+    await expect(cta).toHaveText(BANNER_CTA);
+    await ctx.close();
+  }
+});
+
+test("hero suburb field has a visible check control", async ({ page }) => {
+  await page.goto("/");
+  const check = page.getByRole("button", { name: "Check" });
+  await expect(check).toBeVisible();
+  const box = await check.boundingBox();
+  expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+  expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
 });
 
 test("service area check answers for covered, outer and unknown suburbs", async ({ page }) => {
@@ -272,6 +328,19 @@ test("booking form marks exactly the required fields, visibly and with required 
     await expect(form.locator(`[name="${name}"][aria-required]`), name).toHaveCount(0);
     await expect(form.locator(`[name="${name}"][required]`), name).toHaveCount(0);
   }
+});
+
+test("price ledger fits on a phone without horizontal scrolling", async ({ browser }) => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const page = await ctx.newPage();
+  await page.goto("/packages");
+  await expect(page.locator(".ledger-cards")).toBeVisible();
+  await expect(page.locator(".ledger-table")).toBeHidden();
+  await expect(page.locator(".ledger-card__size strong")).toHaveCount(20);
+  const scrollW = await page.evaluate(() => document.documentElement.scrollWidth);
+  const clientW = await page.evaluate(() => document.documentElement.clientWidth);
+  expect(scrollW).toBeLessThanOrEqual(clientW + 1);
+  await ctx.close();
 });
 
 test("no third-party requests are made on load", async ({ page }) => {
